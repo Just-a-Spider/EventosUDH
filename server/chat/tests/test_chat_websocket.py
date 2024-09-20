@@ -6,7 +6,6 @@ from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import AccessToken
 from server.asgi import application
 from chat.models import Chat
-from profiles.models import TutorProfile, StudentProfile
 
 TEST_CHANNEL_LAYERS = {
     'default': {
@@ -23,22 +22,13 @@ def create_users_and_chat(username, email, password, username_2, email_2, passwo
         email=email,
         password=password
     )
-    tutor_profile = TutorProfile.objects.create(
-        user=user,
-        bio='Test bio'
-    )
     user_2 = get_user_model().objects.create_user(
         username=username_2,
         email=email_2,
         password=password_2
     )
-    student_profile = StudentProfile.objects.create(
-        user=user_2
-    )
-    chat = Chat.objects.create(
-        tutor = tutor_profile,
-        student = student_profile
-    )
+    chat = Chat.objects.create()
+    chat.members.set([user, user_2])
     chat_id = chat.id
     token = AccessToken.for_user(user)
     return user, token, chat_id

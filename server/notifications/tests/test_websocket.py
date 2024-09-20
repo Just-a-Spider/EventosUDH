@@ -20,13 +20,11 @@ def create_users(username, email, password, username_2, email_2, password_2):
         username=username,
         email=email,
         password=password,
-        dni = '12345678',
     )
     user_2 = get_user_model().objects.create_user(
         username=username_2,
         email=email_2,
-        password=password_2, 
-        dni = '12345679',
+        password=password_2,
     )
     
     token = AccessToken.for_user(user)
