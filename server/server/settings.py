@@ -80,7 +80,7 @@ MIDDLEWARE = [
 ]
 
 # Test config
-TEST_RUNNER = 'server.utils.test_runner.CustomTestRunner'
+# TEST_RUNNER = 'server.utils.test_runner.CustomTestRunner'
 
 ROOT_URLCONF = 'server.urls'
 

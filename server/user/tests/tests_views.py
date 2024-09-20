@@ -1,6 +1,6 @@
 from django.urls import reverse
-from rest_framework.test import APITestCase
-from user.models import PasswordResetToken, User
+from user.models import PasswordResetToken
+from server.utils.test_base_test import BaseTest
 
 REGISTER_URL = reverse('local:register')
 LOGIN_URL = reverse('local:login')
@@ -15,13 +15,6 @@ LOGIN_USER_DATA = {
     'email_username': 'john.doe@udh.edu.pe',
     'password': 'password123',
 }
-
-class BaseTest(APITestCase):
-    def register_user(self):
-        self.client.post(REGISTER_URL, REGISTER_USER_DATA, format='json')
-
-    def login_user(self):
-        self.client.post(LOGIN_URL, LOGIN_USER_DATA, format='json')
 
 class RegisterViewsTests(BaseTest):
     def test_register_success(self):
@@ -66,7 +59,8 @@ class MeLogoutViewsTests(BaseTest):
             'username': REGISTER_USER_DATA['username'],
             'first_name': REGISTER_USER_DATA['first_name'],
             'last_name': REGISTER_USER_DATA['last_name'],
-            'email': REGISTER_USER_DATA['email']
+            'email': REGISTER_USER_DATA['email'],
+            'role': 'student'
         }
         self.assertEqual(response.data, expected_data)
 

@@ -46,7 +46,19 @@ class LoginSerializer(serializers.Serializer):
             # 'role'
         ]
 
+class SimpleUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'first_name', 
+            'last_name', 
+            'username',
+            'email'
+        ]
+
 class UserSerializer(serializers.ModelSerializer):
+    role = serializers.CharField(read_only=True)
+
     class Meta:
         model = User
         fields = [
@@ -55,6 +67,7 @@ class UserSerializer(serializers.ModelSerializer):
             'last_name', 
             'username',
             'email',
+            'role'
         ]
 
 class SendEmailSerializer(serializers.Serializer):

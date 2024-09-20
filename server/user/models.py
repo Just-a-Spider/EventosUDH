@@ -6,7 +6,17 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 
 class User(AbstractUser):
+    ROLE_CHOICES=[
+        ('student', 'Estudiante'),
+        ('coordinator', 'Coordinador'),
+        ('speaker', 'Ponente')
+    ]
     # Add any other custom fields here
+    role = models.CharField(
+        max_length=20,
+        choices=ROLE_CHOICES,
+        default='student'
+    )
 
     class Meta:
         verbose_name = _('user')

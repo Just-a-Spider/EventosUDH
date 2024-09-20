@@ -4,7 +4,7 @@ from django.db import transaction
 from django.utils import timezone
 from django.http import HttpResponse
 from user.api.serializers import CustomTokenObtainPairSerializer
-from faculties.models import Faculty
+from faculties.models import Faculty, FacultyStudent
 
 def login_success_response(user):
     refresh = CustomTokenObtainPairSerializer.get_token(user)
@@ -65,7 +65,7 @@ def fetch_google_classroom_courses(backend, user, response, *args, **kwargs):
 
             if not linked_faulties:
                 faculty, _ = Faculty.objects.get_or_create(name=course_faculty)
-                user.faculties.add(faculty)
+                FacultyStudent.objects.get_or_create(faculty=faculty, student=user)
                 linked_faulties = True
 
     # Login the user with JWT from the user's view

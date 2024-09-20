@@ -13,8 +13,4 @@ class ChatsListView(viewsets.ReadOnlyModelViewSet):
     lookup_url_kwarg = 'chat_id'
     
     def get_queryset(self):
-        return Chat.objects.filter(
-            tutor__user=self.request.user
-        ) | Chat.objects.filter(
-            student__user=self.request.user
-        )
+        return Chat.objects.filter(members=self.request.user)
