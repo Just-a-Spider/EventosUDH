@@ -1,5 +1,5 @@
 from events import models
-from user.api.serializers import SimpleUserSerializer
+from user.api.serializers import StudentSerializer, CoordinatorSerializer, SpeakerSerializer
 from rest_framework import serializers
 
 class EventTypeModelSerializer(serializers.ModelSerializer):
@@ -22,9 +22,9 @@ class CreateEventModelSerializer(serializers.ModelSerializer):
         exclude = ['organizer', 'faculty']
 
 class FullEventModelSerializer(serializers.ModelSerializer):
-    organizer = SimpleUserSerializer(required=False)
-    student_organizer = SimpleUserSerializer(required=False)
-    participants = SimpleUserSerializer(many=True, read_only=True)
+    organizer = CoordinatorSerializer(required=False)
+    student_organizer = StudentSerializer(required=False)
+    participants = StudentSerializer(many=True, read_only=True)
     faculty = serializers.StringRelatedField(read_only=True)
 
     class Meta:
@@ -32,7 +32,7 @@ class FullEventModelSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class EventParticipantModelSerializer(serializers.ModelSerializer):
-    user = SimpleUserSerializer()
+    user = StudentSerializer()
 
     class Meta:
         model = models.EventParticipant

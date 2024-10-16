@@ -21,15 +21,15 @@ class Event(models.Model):
 
     # Foreigns
     faculty = models.ForeignKey('faculties.Faculty', on_delete=models.CASCADE, related_name='faculty_events')
-    organizer = models.ForeignKey('user.User', on_delete=models.CASCADE, related_name='coordinator_organizer')
+    organizer = models.ForeignKey('user.Coordinator', on_delete=models.CASCADE, related_name='coordinator_organizer')
     student_organizer = models.ForeignKey(
-        'user.User', 
+        'user.Student', 
         on_delete=models.CASCADE, 
         related_name='student_organizer', 
         null=True
     )
     event_type = models.ForeignKey(EventType, on_delete=models.CASCADE, related_name='event_type')
-    participants = models.ManyToManyField('user.User', through='EventParticipant', related_name='participated_events')
+    participants = models.ManyToManyField('user.Student', through='EventParticipant', related_name='participated_events')
 
     # Metadata
     created_at = models.DateTimeField(auto_now_add=True)
@@ -43,7 +43,7 @@ class Event(models.Model):
     
 class EventParticipant(models.Model):
     event = models.ForeignKey('events.Event', on_delete=models.CASCADE, related_name='event_participants')
-    user = models.ForeignKey('user.User', on_delete=models.CASCADE, related_name='events_participated')
+    user = models.ForeignKey('user.Student', on_delete=models.CASCADE, related_name='events_participated')
     attended = models.BooleanField(default=False)
 
     class Meta:

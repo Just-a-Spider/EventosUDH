@@ -1,12 +1,12 @@
 from django.urls import reverse
 from rest_framework import status
 from events.models import Event, EventType
-from faculties.models import Faculty, FacultyCoordinator
+from faculties.models import Faculty
 from server.utils.test_base_test import BaseTest
 
 class EventTypeViewSetTestCase(BaseTest):
     def setUp(self):
-        self.register_user()
+        self.register_student()
         self.login_user()
         self.event_type = EventType.objects.create(name='Conference')
 
@@ -25,11 +25,7 @@ class EventListCreateTestCase(BaseTest):
         self.coordinator = self.get_coordinator()
         self.login_user()
         self.event_type = EventType.objects.create(name='Conference')
-        self.faculty = Faculty.objects.create(name='Faculty 1')
-        self.faculty_coordinator = FacultyCoordinator.objects.create(
-            faculty=self.faculty,
-            coordinator_id=self.coordinator.id
-        )
+        self.faculty = Faculty.objects.create(name='Faculty 1', coordinator=self.coordinator)
 
     def test_get_events(self):
         response = self.client.get(reverse('events-list'))
@@ -54,11 +50,7 @@ class EventViewSetTestCase(BaseTest):
         self.coordinator = self.get_coordinator()
         self.login_user()
         self.event_type = EventType.objects.create(name='Conference')
-        self.faculty = Faculty.objects.create(name='Faculty 1')
-        self.faculty_coordinator = FacultyCoordinator.objects.create(
-            faculty=self.faculty,
-            coordinator_id=self.coordinator.id
-        )
+        self.faculty = Faculty.objects.create(name='Faculty 1', coordinator=self.coordinator)
         self.event = Event.objects.create(
             title='Event 1',
             description='Description of event 1',

@@ -17,29 +17,44 @@ LOGIN_USER_DATA = {
 }
 
 class RegisterViewsTests(BaseTest):
-    def test_register_success(self):
-        response = self.client.post(REGISTER_URL, REGISTER_USER_DATA, format='json')
+    def test_register_student_success(self):
+        data = REGISTER_USER_DATA.copy()
+        data['role'] = 'student'
+        response = self.client.post(REGISTER_URL, data, format='json')
         self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data['detail'], 'Student registered')
 
-    def test_register_existing_user(self):
-        self.register_user()
-        response = self.client.post(REGISTER_URL, REGISTER_USER_DATA, format='json')
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.data['detail'], 'User with this username already exists')
+    def test_register_coordinator_success(self):
+        data = REGISTER_USER_DATA.copy()
+        data['role'] = 'coordinator'
+        response = self.client.post(REGISTER_URL, data, format='json')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data['detail'], 'Coordinator registered')
+
+    def test_register_speaker_success(self):
+        data = REGISTER_USER_DATA.copy()
+        data['role'] = 'speaker'
+        response = self.client.post(REGISTER_URL, data, format='json')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data['detail'], 'Speaker registered')
 
 class LoginViewsTests(BaseTest):
     def setUp(self):
-        self.register_user()
+        self.register_student()
+        self.register_coordinator()
 
-    def test_login_success(self):
-        response = self.client.post(LOGIN_URL, LOGIN_USER_DATA, format='json')
+    def test_login_student_success(self):
+        login_data = LOGIN_USER_DATA.copy()
+        login_data['role'] = 'student'
+        response = self.client.post(LOGIN_URL, login_data, format='json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['detail'], 'Login successful')
 
     def test_login_invalid_credentials(self):
         invalid_login_data = {
             'email_username': LOGIN_USER_DATA['email_username'],
-            'password': 'wrongpassword'
+            'password': 'wrongpassword',
+            'role': 'student'
         }
         response = self.client.post(LOGIN_URL, invalid_login_data, format='json')
         self.assertEqual(response.status_code, 401)
@@ -47,24 +62,39 @@ class LoginViewsTests(BaseTest):
 
 class MeLogoutViewsTests(BaseTest):
     def setUp(self):
-        self.register_user()
-        self.login_user()
+        self.register_student()
+        self.register_coordinator()
 
-    def test_me_success(self):
+    def test_me_student_success(self):
+        self.login_user()
         url = reverse('local:me')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         expected_data = {
-            'id': response.data['id'],
             'username': REGISTER_USER_DATA['username'],
+            'email': REGISTER_USER_DATA['email'],
             'first_name': REGISTER_USER_DATA['first_name'],
             'last_name': REGISTER_USER_DATA['last_name'],
-            'email': REGISTER_USER_DATA['email'],
-            'role': 'student'
+            'code': ''
         }
         self.assertEqual(response.data, expected_data)
 
+    def test_me_coordinator_success(self):
+        self.login_user(role='coordinator')
+        url = reverse('local:me')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        expected_data = {
+            'username': REGISTER_USER_DATA['username'],
+            'email': REGISTER_USER_DATA['email'],
+            'first_name': REGISTER_USER_DATA['first_name'],
+            'last_name': REGISTER_USER_DATA['last_name'],
+            'code': ''
+        }
+        self.assertEqual(response.data, expected_data)
+    
     def test_logout_success(self):
+        self.login_user()
         url = reverse('local:logout')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
@@ -80,7 +110,7 @@ class MeLogoutViewsTests(BaseTest):
 
 class RefreshTokenViewTests(BaseTest):
     def setUp(self):
-        self.register_user()
+        self.register_student()
         self.login_user()
 
     def test_refresh_token_success(self):
@@ -90,12 +120,12 @@ class RefreshTokenViewTests(BaseTest):
 
 class PasswordResetTests(BaseTest):
     def setUp(self):
-        self.register_user()
+        self.register_student()
         self.login_user()
 
     def test_send_password_reset_token(self):
         url = reverse('local:send-password-reset-token')
-        response = self.client.post(url, {'email': REGISTER_USER_DATA['email']}, format='json')
+        response = self.client.post(url, {'email': REGISTER_USER_DATA['email'], 'role': 'student'}, format='json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['detail'], 'Correo electrónico enviado')
 
@@ -103,7 +133,8 @@ class PasswordResetTests(BaseTest):
         url = reverse('local:password-reset')
         token = PasswordResetToken.objects.create(
             email=REGISTER_USER_DATA['email'],
-            token=PasswordResetToken.generate_token()
+            token=PasswordResetToken.generate_token(),
+            role='student'
         )
         response = self.client.post(url, {
             'password': 'newpassword123', 

@@ -119,13 +119,11 @@ DATABASES = {
 }
 
 # Channels
-REDIS_URL = os.getenv('REDIS_URL')
-
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [REDIS_URL],
+            'hosts': [os.getenv('REDIS_URL')],
         },
     },
 }
@@ -183,7 +181,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Auth settings
-AUTH_USER_MODEL = 'user.User'
+# AUTH_USER_MODEL = 'user.User'
 
 # Rest_auth settings
 REST_AUTH = {

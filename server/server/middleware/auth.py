@@ -3,18 +3,22 @@ from rest_framework_simplejwt.tokens import TokenError
 from user.models import *
 from user.api.serializers import CustomTokenObtainPairSerializer
 from server.utils.user_utils import set_token_cookie
+from server.middleware.auth_classes import role_to_model
 
 class CustomJWTAuthentication(JWTAuthentication):
     def authenticate(self, request):
         access_token = request.COOKIES.get('access_token')
         refresh_token = request.COOKIES.get('refresh_token')
+        user_model = None
 
         if not access_token:
             return None
 
         try:
             validated_token = self.get_validated_token(access_token)
-            user = self.get_user(validated_token)
+            role = validated_token['role']
+            user_model = role_to_model[role]
+            user = user_model.objects.get(id=validated_token['user_id'])
             return (user, validated_token)
         except TokenError:
             # Access token is invalid or expired
@@ -31,9 +35,13 @@ class CustomJWTAuthentication(JWTAuthentication):
             return None
 
     def get_user(self, validated_token):
+        user_model = None
+
         try:
             user_id = validated_token['user_id']
-            user = User.objects.get(id=user_id)
+            role = validated_token['role']
+            user_model = role_to_model[role]
+            user = user_model.objects.get(id=user_id)
             return user
-        except User.DoesNotExist:
+        except user_model.DoesNotExist:
             return None

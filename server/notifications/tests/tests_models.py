@@ -1,13 +1,15 @@
 from django.test import TestCase
 from notifications.models import Notification
-from user.models import User
+from user.models import Student
 
 class NotificationModelTest(TestCase):
     def setUp(self):
-        user = User.objects.create_user(
+        user = Student.objects.create_user(
             username='2017110918',
             email='testuser@gmail.com',
             password='Test0116p',
+            first_name='Test',
+            last_name='User'
         )
         Notification.objects.create(
             title='Test notification', 

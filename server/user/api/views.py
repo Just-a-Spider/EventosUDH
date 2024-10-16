@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticated
 from server.middleware.auth import CustomJWTAuthentication
+from server.middleware.auth_classes import role_to_model, serializer_class_map
 from server.utils.user_utils import authenticate_user, set_token_cookie
 from server.views.custom_views import CustomAuthenticatedAPIView
 from django.db.utils import IntegrityError
@@ -16,14 +17,19 @@ class RegisterView(APIView):
 
     def post(self, request, *args, **kwargs):
         try:
-            user = models.User.objects.create_user(
-                username=request.data['username'],
-                email=request.data['email'],
-                password=request.data['password'],
-                first_name=request.data['first_name'],
-                last_name=request.data['last_name'],
-            )
-            return Response({'detail': 'User registered successfully'}, status=status.HTTP_201_CREATED)
+            # Get the role from the request
+            role = request.data.get('role')
+            if not role:
+                return Response({'detail': 'Rol no proporcionado'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Register based on the user and the role
+            register_data = request.data.copy()
+            register_data.pop('role')
+            user = role_to_model[role](**register_data)
+            user.set_password(request.data.get('password'))
+            user.save()
+
+            return Response({'detail': f'{role.capitalize()} registered'}, status=status.HTTP_201_CREATED)
         except IntegrityError:
             return Response({'detail': 'User with this username already exists'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -38,13 +44,19 @@ class LoginView(APIView):
             return Response({'detail': 'Datos de entrada no válidos'}, status=status.HTTP_400_BAD_REQUEST)
         email_username = serializer.validated_data.get('email_username')
         password = serializer.validated_data.get('password')
+        role = serializer.validated_data.get('role')
+
+        if role not in role_to_model:
+            return Response({'detail': 'Rol no válido'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            model = role_to_model[role]
 
         try:
             if '@' in email_username:
-                user = models.User.objects.get(email=email_username)
+                user = model.objects.get(email=email_username)
             else:
-                user = models.User.objects.get(username=email_username)      
-        except models.User.DoesNotExist:
+                user = model.objects.get(username=email_username)      
+        except model.DoesNotExist:
             return Response({'detail': 'Usuario no Encontrado'}, status=status.HTTP_404_NOT_FOUND)
         return authenticate_user(user, password)
 
@@ -59,7 +71,11 @@ class LogoutView(CustomAuthenticatedAPIView):
 class MeView(RetrieveAPIView):
     authentication_classes = [CustomJWTAuthentication]
     permission_classes = [IsAuthenticated]
-    serializer_class = serializers.UserSerializer
+
+    def get_serializer_class(self):
+        user = self.request.user
+        user_class_name = user.__class__.__name__
+        return serializer_class_map[user_class_name]
     
     def get_object(self):
         user = self.request.user
@@ -90,12 +106,19 @@ class GetSendPasswordReset(APIView):
 
     def post(self, request):
         email = request.data.get('email')
+        role = request.data.get('role')
         if not email:
             return Response({'detail': 'Correo electrónico no proporcionado'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        user_model = role_to_model.get(role)
+        if not user_model:
+            return Response({'detail': 'Rol no válido'}, status=status.HTTP_400_BAD_REQUEST)
+        
         try:
-            user = models.User.objects.get(email=email)
-        except models.User.DoesNotExist:
+            user = user_model.objects.get(email=email)            
+        except user_model.DoesNotExist:
             return Response({'detail': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+        
         user.send_password_reset_email()
         return Response({'detail': 'Correo electrónico enviado'}, status=status.HTTP_200_OK)
         
@@ -107,15 +130,20 @@ class PasswordResetView(APIView):
         password = request.data.get('password')
         if not token or not password:
             return Response({'detail': 'Token o contraseña no proporcionados'}, status=status.HTTP_400_BAD_REQUEST)
+        
         try:
-            token = models.PasswordResetToken.objects.get(token=token)
-            user = models.User.objects.get(email=token.email)
+            token_obj = models.PasswordResetToken.objects.get(token=token)
+            user_model = role_to_model.get(token_obj.role)
+            if not user_model:
+                return Response({'detail': 'Rol no válido'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            user = user_model.objects.get(email=token_obj.email)
             user.set_password(password)
             user.save()
             # Delete all the tokens for the user
-            serializers.PasswordResetToken.objects.filter(email=token.email).delete()
+            models.PasswordResetToken.objects.filter(email=token_obj.email).delete()
             return Response({'detail': 'Contraseña restablecida'}, status=status.HTTP_200_OK)
-        except models.User.DoesNotExist:
-            return Response({'detail': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
-        except serializers.PasswordResetToken.DoesNotExist:
+        except models.PasswordResetToken.DoesNotExist:
             return Response({'detail': 'Token no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+        except user_model.DoesNotExist:
+            return Response({'detail': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)

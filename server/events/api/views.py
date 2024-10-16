@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from server.views.custom_views import CustomAuthenticatedModelViewset, CustomAuthenticatedAPIView
 from events import models
-from faculties.models import FacultyCoordinator
+from faculties.models import Faculty
 from rest_framework.exceptions import PermissionDenied
 
 class EventTypeViewSet(CustomAuthenticatedModelViewset):
@@ -19,7 +19,7 @@ class EventCreateAPI(CustomAuthenticatedAPIView):
     queryset = models.Event.objects.all()
 
     def post(self, request):
-        if request.user.role != 'coordinator' or not FacultyCoordinator.objects.filter(coordinator=request.user).exists():
+        if request.user.role != 'coordinator' or not Faculty.objects.filter(coordinator=request.user).exists():
             raise PermissionDenied('You are not allowed to create events')
         new_event = models.Event.objects.create(
             title=request.data['title'],
@@ -29,7 +29,7 @@ class EventCreateAPI(CustomAuthenticatedAPIView):
             location=request.data['location'],
             event_type=models.EventType.objects.get(id=request.data['event_type']),
             organizer=self.request.user,
-            faculty = FacultyCoordinator.objects.get(coordinator=self.request.user).faculty,
+            faculty = Faculty.objects.get(coordinator=self.request.user).faculty,
         )
         new_event.save()
         return Response(
@@ -60,7 +60,7 @@ class EventViewSet(CustomAuthenticatedModelViewset):
         # Fields to update
         fields_to_update = {
             'organizer': self.request.user,
-            'faculty': FacultyCoordinator.objects.get(coordinator=self.request.user).faculty,
+            'faculty': Faculty.objects.get(coordinator=self.request.user).faculty,
             'student_organizer': None
         }
 
