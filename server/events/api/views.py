@@ -1,58 +1,42 @@
-from . import serializers
 from rest_framework import status
 from rest_framework.response import Response
-from server.views.custom_views import CustomAuthenticatedModelViewset, CustomAuthenticatedAPIView
-from events import models
-from faculties.models import Faculty
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.decorators import action
+from rest_framework.pagination import LimitOffsetPagination
+from server.views.custom_views import AuthenticatedModelViewset
 from server.middleware.auth_classes import role_to_model
+from faculties.models import Faculty
+from events import models
+from events.api import serializers
+from user.api.serializers import StudentSerializer
 
-class EventTypeViewSet(CustomAuthenticatedModelViewset):
-    serializer_class = serializers.EventTypeModelSerializer
-    queryset = models.EventType.objects.all()
-
-class EventListViewSet(CustomAuthenticatedModelViewset):
-    serializer_class = serializers.SimpleEventModelSerializer
+class EventViewSet(AuthenticatedModelViewset):
     queryset = models.Event.objects.all()
-
-class EventCreateAPI(CustomAuthenticatedAPIView):
-    serializer_class = serializers.CreateEventModelSerializer
-    queryset = models.Event.objects.all()
-
-    def post(self, request):
-        if request.user.__class__ != role_to_model.get('coordinator') or not Faculty.objects.filter(coordinator=request.user).exists():
+    lookup_field = 'id'
+    pagination_class = LimitOffsetPagination
+    
+    # Methods
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return serializers.SimpleEventModelSerializer
+        elif self.action == 'create' or self.action == 'update' :
+            return serializers.SimpleEventModelSerializer
+        return serializers.FullEventModelSerializer
+    
+    def perform_create(self, serializer):
+        if (
+            self.request.user.__class__ != role_to_model.get('coordinator') 
+            or not 
+            Faculty.objects.filter(coordinator=self.request.user).exists()
+        ):
             raise PermissionDenied('You are not allowed to create events')
-        new_event = models.Event.objects.create(
-            title=request.data['title'],
-            description=request.data['description'],
-            start_date=request.data['start_date'],
-            end_date=request.data['end_date'],
-            location=request.data['location'],
-            event_type=models.EventType.objects.get(id=request.data['event_type']),
+        serializer.save(
             organizer=self.request.user,
             faculty = Faculty.objects.get(coordinator=self.request.user),
         )
-        new_event.save()
-        return Response(
-            {'message': 'Event created successfully'}, 
-            status=status.HTTP_201_CREATED
-        )
-
-class EventViewSet(CustomAuthenticatedModelViewset):
-    serializer_class = serializers.FullEventModelSerializer
-    queryset = models.Event.objects.all()
-    lookup_field = 'id'
-
-    def add_participant(self, request, id):
-        event = self.get_object()
-        event.participants.add(request.user)
-        return Response(
-            {'message': 'You have been added to the event'},
-            status=status.HTTP_200_OK
-        )
 
     def perform_update(self, serializer):
-        if self.request.user.__class__ == role_to_model.get('student'):
+        if self.request.user.__class__ != role_to_model.get('coordinator'):
             raise PermissionDenied('You are not allowed to update events')
 
         instance = self.get_object()
@@ -74,6 +58,42 @@ class EventViewSet(CustomAuthenticatedModelViewset):
         serializer.update(instance, validated_data)
 
     def perform_destroy(self, instance):
-        if self.request.user.__class__ == role_to_model.get('student'):
+        if self.request.user.__class__ != role_to_model.get('coordinator'):
             raise PermissionDenied('You are not allowed to delete events')
         instance.delete()
+
+    # Custom actions 
+    @action(detail=True, methods=['get'], url_path='join-event')
+    def join_event(self, request, id):
+        event = self.get_object()
+        event.participants.add(request.user)
+        return Response(
+            {'message': 'You have been added to the event'},
+            status=status.HTTP_200_OK
+        )
+    
+    @action(detail=True, methods=['get'], url_path='leave-event')
+    def leave_event(self, request, id):
+        event = self.get_object()
+        event.participants.remove(request.user)
+        return Response(
+            {'message': 'You have been removed from the event'},
+            status=status.HTTP_200_OK
+        )
+    
+    @action(detail=True, methods=['get'], url_path='participants')
+    def get_participants(self, request, id):
+        event = self.get_object()
+        participants = event.participants.all()
+        serializer = StudentSerializer(participants, many=True)
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )
+    
+from server.permissions import IsCoordinator
+from rest_framework.permissions import IsAuthenticated
+
+class EventTypeViewSet(AuthenticatedModelViewset):
+    serializer_class = serializers.EventTypeModelSerializer
+    permission_classes = [IsAuthenticated, IsCoordinator]

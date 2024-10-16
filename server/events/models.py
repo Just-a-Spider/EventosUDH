@@ -3,6 +3,7 @@ from django.db import models
 
 class EventType(models.Model):
     name = models.CharField(max_length=255)
+    faculty = models.ForeignKey('faculties.Faculty', on_delete=models.CASCADE, related_name='faculty_event_types')
 
     class Meta:
         db_table = 'event_types'
@@ -26,7 +27,8 @@ class Event(models.Model):
         'user.Student', 
         on_delete=models.CASCADE, 
         related_name='student_organizer', 
-        null=True
+        null=True,
+        blank=True
     )
     event_type = models.ForeignKey(EventType, on_delete=models.CASCADE, related_name='event_type')
     participants = models.ManyToManyField('user.Student', through='EventParticipant', related_name='participated_events')

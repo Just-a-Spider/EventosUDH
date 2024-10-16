@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from server.middleware.auth import CustomJWTAuthentication
 from server.middleware.auth_classes import role_to_model, serializer_class_map
 from server.utils.user_utils import authenticate_user, set_token_cookie
-from server.views.custom_views import CustomAuthenticatedAPIView
+from server.views.custom_views import AuthenticatedAPIView
 from django.db.utils import IntegrityError
 from user import models
 from . import serializers
@@ -16,22 +16,15 @@ class RegisterView(APIView):
     serializer_class = serializers.RegisterSerializer
 
     def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
         try:
-            # Get the role from the request
-            role = request.data.get('role')
-            if not role:
-                return Response({'detail': 'Rol no proporcionado'}, status=status.HTTP_400_BAD_REQUEST)
-            
-            # Register based on the user and the role
-            register_data = request.data.copy()
-            register_data.pop('role')
-            user = role_to_model[role](**register_data)
-            user.set_password(request.data.get('password'))
-            user.save()
-
-            return Response({'detail': f'{role.capitalize()} registered'}, status=status.HTTP_201_CREATED)
+            serializer.is_valid(raise_exception=True)
+            user = serializer.save()
+            return Response({'detail': f'{user.__class__.__name__.capitalize()} registered'}, status=status.HTTP_201_CREATED)
         except IntegrityError:
             return Response({'detail': 'User with this username already exists'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginView(APIView):
     serializer_class = serializers.LoginSerializer
@@ -60,7 +53,7 @@ class LoginView(APIView):
             return Response({'detail': 'Usuario no Encontrado'}, status=status.HTTP_404_NOT_FOUND)
         return authenticate_user(user, password)
 
-class LogoutView(CustomAuthenticatedAPIView):
+class LogoutView(AuthenticatedAPIView):
 
     def get(self, request):
         response = Response({'detail': 'Logout successful'})
@@ -83,7 +76,7 @@ class MeView(RetrieveAPIView):
             raise NotFound('User not found')
         return user
 
-class RefreshTokenView(CustomAuthenticatedAPIView):
+class RefreshTokenView(AuthenticatedAPIView):
 
     def get(self, request):
         refresh_token = request.COOKIES.get('refresh_token')

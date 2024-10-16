@@ -15,24 +15,36 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['role'] = user_class.lower()
         return token
 
-# ----------------- Auth -----------------  
+# ----------------- Auth ----------------- 
+role_to_model = {
+    'student': Student,
+    'coordinator': Coordinator,
+    'speaker': Speaker,
+}
+ 
 class RegisterSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=20)
+    username = serializers.CharField(max_length=150)
+    password = serializers.CharField(write_only=True)
     email = serializers.EmailField()
-    password = serializers.CharField(
-        max_length=128,
-        write_only=True
-    )
-    first_name = serializers.CharField(max_length=50)
-    last_name = serializers.CharField(max_length=50)
+    first_name = serializers.CharField(max_length=30)
+    last_name = serializers.CharField(max_length=30)
+    role = serializers.ChoiceField(choices=['student', 'coordinator', 'speaker'])
     code = serializers.CharField(max_length=22, required=False)
-    phone = serializers.CharField(max_length=9, required=False)
-    role = serializers.CharField(write_only=True)
+    bio = serializers.CharField(required=False)
+    phone = serializers.CharField(max_length=10, required=False)
+
+    def create(self, validated_data):
+        role = validated_data.pop('role')
+        user_class = role_to_model[role]
+        user = user_class(**validated_data)
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
     
 class LoginSerializer(serializers.Serializer):
     email_username = serializers.CharField(write_only=True, required=False)
     password = serializers.CharField(write_only=True)
-    role = serializers.CharField(write_only=True, required=False)
+    role = serializers.ChoiceField(choices=['student', 'coordinator', 'speaker'])
 
 # ----------------- User -----------------
 class StudentSerializer(serializers.ModelSerializer):
@@ -48,7 +60,7 @@ class CoordinatorSerializer(serializers.ModelSerializer):
 class SpeakerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Speaker
-        fields = ['username', 'email', 'first_name', 'last_name']
+        fields = ['username', 'email', 'first_name', 'last_name', 'bio', 'phone']
 
 # ----------------- Password Reset -----------------
 class SendEmailSerializer(serializers.Serializer):

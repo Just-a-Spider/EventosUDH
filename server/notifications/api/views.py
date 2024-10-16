@@ -1,9 +1,9 @@
 from rest_framework import viewsets
-from server.views.custom_views import CustomAuthenticatedModelViewset
+from server.views.custom_views import AuthenticatedModelViewset
 from notifications.models import Notification
 from .serializers import NotificationSerializer
     
-class NotificationList(CustomAuthenticatedModelViewset):
+class NotificationList(AuthenticatedModelViewset):
     serializer_class = NotificationSerializer
 
     def get_queryset(self):
