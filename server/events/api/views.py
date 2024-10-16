@@ -5,6 +5,7 @@ from server.views.custom_views import CustomAuthenticatedModelViewset, CustomAut
 from events import models
 from faculties.models import Faculty
 from rest_framework.exceptions import PermissionDenied
+from server.middleware.auth_classes import role_to_model
 
 class EventTypeViewSet(CustomAuthenticatedModelViewset):
     serializer_class = serializers.EventTypeModelSerializer
@@ -19,7 +20,7 @@ class EventCreateAPI(CustomAuthenticatedAPIView):
     queryset = models.Event.objects.all()
 
     def post(self, request):
-        if request.user.role != 'coordinator' or not Faculty.objects.filter(coordinator=request.user).exists():
+        if request.user.__class__ != role_to_model.get('coordinator') or not Faculty.objects.filter(coordinator=request.user).exists():
             raise PermissionDenied('You are not allowed to create events')
         new_event = models.Event.objects.create(
             title=request.data['title'],
@@ -29,7 +30,7 @@ class EventCreateAPI(CustomAuthenticatedAPIView):
             location=request.data['location'],
             event_type=models.EventType.objects.get(id=request.data['event_type']),
             organizer=self.request.user,
-            faculty = Faculty.objects.get(coordinator=self.request.user).faculty,
+            faculty = Faculty.objects.get(coordinator=self.request.user),
         )
         new_event.save()
         return Response(
@@ -51,7 +52,7 @@ class EventViewSet(CustomAuthenticatedModelViewset):
         )
 
     def perform_update(self, serializer):
-        if self.request.user.role == 'student':
+        if self.request.user.__class__ == role_to_model.get('student'):
             raise PermissionDenied('You are not allowed to update events')
 
         instance = self.get_object()
@@ -60,7 +61,7 @@ class EventViewSet(CustomAuthenticatedModelViewset):
         # Fields to update
         fields_to_update = {
             'organizer': self.request.user,
-            'faculty': Faculty.objects.get(coordinator=self.request.user).faculty,
+            'faculty': Faculty.objects.get(coordinator=self.request.user),
             'student_organizer': None
         }
 
@@ -73,6 +74,6 @@ class EventViewSet(CustomAuthenticatedModelViewset):
         serializer.update(instance, validated_data)
 
     def perform_destroy(self, instance):
-        if self.request.user.role == 'student':
+        if self.request.user.__class__ == role_to_model.get('student'):
             raise PermissionDenied('You are not allowed to delete events')
         instance.delete()

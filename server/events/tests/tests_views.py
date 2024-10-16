@@ -23,7 +23,7 @@ class EventTypeViewSetTestCase(BaseTest):
 class EventListCreateTestCase(BaseTest):
     def setUp(self):
         self.coordinator = self.get_coordinator()
-        self.login_user()
+        self.login_user(role='coordinator')
         self.event_type = EventType.objects.create(name='Conference')
         self.faculty = Faculty.objects.create(name='Faculty 1', coordinator=self.coordinator)
 
@@ -48,7 +48,7 @@ class EventListCreateTestCase(BaseTest):
 class EventViewSetTestCase(BaseTest):
     def setUp(self):
         self.coordinator = self.get_coordinator()
-        self.login_user()
+        self.login_user(role='coordinator')
         self.event_type = EventType.objects.create(name='Conference')
         self.faculty = Faculty.objects.create(name='Faculty 1', coordinator=self.coordinator)
         self.event = Event.objects.create(
