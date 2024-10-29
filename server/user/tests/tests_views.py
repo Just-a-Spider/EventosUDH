@@ -75,7 +75,7 @@ class MeLogoutViewsTests(BaseTest):
             'email': REGISTER_USER_DATA['email'],
             'first_name': REGISTER_USER_DATA['first_name'],
             'last_name': REGISTER_USER_DATA['last_name'],
-            'code': ''
+            'code': REGISTER_USER_DATA['username']
         }
         self.assertEqual(response.data, expected_data)
 
