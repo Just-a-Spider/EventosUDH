@@ -1,16 +1,15 @@
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.decorators import action
 from rest_framework.pagination import LimitOffsetPagination
-from server.views.custom_views import AuthenticatedModelViewset
 from server.middleware.auth_classes import role_to_model
 from faculties.models import Faculty
 from events import models
 from events.api import serializers
 from user.api.serializers import StudentSerializer
 
-class EventViewSet(AuthenticatedModelViewset):
+class EventViewSet(viewsets.ModelViewSet):
     queryset = models.Event.objects.all()
     lookup_field = 'id'
     pagination_class = LimitOffsetPagination
@@ -94,6 +93,6 @@ class EventViewSet(AuthenticatedModelViewset):
 from server.permissions import IsCoordinator
 from rest_framework.permissions import IsAuthenticated
 
-class EventTypeViewSet(AuthenticatedModelViewset):
+class EventTypeViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.EventTypeModelSerializer
     permission_classes = [IsAuthenticated, IsCoordinator]
