@@ -1,0 +1,109 @@
+<!-- Content goes here -->
+<div class="flex justify-content-center align-items-center h-screen">
+  <div
+    class="flex flex-column align-items-center justify-content-center w-full md:w-5 lg:w-4 card p-3"
+  >
+    <h2 class="text-center">Nombre de la Aplicación</h2>
+    <div class="card w-full p-4">
+      <p-button
+        label="Iniciar sesión con Google"
+        styleClass="w-full mt-3"
+        (click)="googleLogin()"
+      />
+      <h2 class="mb-3">{{ toggleForm ? "Regístrate" : "Bienvenido" }}</h2>
+      <!-- Form for login or register -->
+      @if (toggleForm === false) {
+      <!-- Login Form -->
+      @if (messages.length > 0) {
+      <p-messages [(value)]="messages" [closable]="false" />
+      }
+      <form [formGroup]="loginFormGroup" class="flex flex-column gap-2 w-full">
+        <input
+          type="text"
+          pInputText
+          formControlName="email_username"
+          placeholder="Correo o Código de Estudiante"
+          class="p-inputtext w-full"
+        />
+        <p-password
+          formControlName="password"
+          placeholder="Contraseña"
+          [feedback]="false"
+          [inputStyle]="{ width: '100%' }"
+          [style]="{ width: '100%' }"
+        />
+        <p-button
+          label="Iniciar sesión"
+          styleClass="p-button-primary mt-3 w-full"
+          (click)="login()"
+        />
+        <p-button
+          label="Olvidé mi contraseña"
+          styleClass="p-button-primary mt-3 w-full"
+          (click)="forgotPassword()"
+        />
+      </form>
+      } @else {
+      <!-- Register Form -->
+      <form
+        [formGroup]="registerFormGroup"
+        class="flex flex-column gap-2 w-full"
+      >
+        <!-- Row 2: Correo (Full width) -->
+        <input
+          type="text"
+          pInputText
+          formControlName="email"
+          placeholder="Correo"
+          class="p-inputtext w-full"
+        />
+        <!-- Row 3: Nombres and Apellidos (side by side) -->
+        <div class="flex gap-2">
+          <input
+            type="text"
+            pInputText
+            formControlName="first_name"
+            placeholder="Nombres"
+            class="p-inputtext w-full"
+          />
+          <input
+            type="text"
+            pInputText
+            formControlName="last_name"
+            placeholder="Apellidos"
+            class="p-inputtext w-full"
+          />
+        </div>
+        <!-- Row 4: Contraseña (Full width) -->
+        <p-password
+          formControlName="password"
+          placeholder="Contraseña"
+          [feedback]="true"
+          [inputStyle]="{ width: '100%' }"
+          [style]="{ width: '100%' }"
+        ></p-password>
+        <p-password
+          formControlName="confirm_password"
+          placeholder="Confirmar contraseña"
+          [feedback]="true"
+          [inputStyle]="{ width: '100%' }"
+          [style]="{ width: '100%' }"
+        ></p-password>
+        <!-- Button: Register -->
+        <button
+          pButton
+          type="submit"
+          label="Registrarse"
+          (click)="register()"
+          class="w-full mt-3"
+        ></button>
+      </form>
+      }
+      <p-button
+        styleClass="p-button-secondary mt-3 w-full"
+        label="Cambiar a {{ toggleForm ? 'Iniciar sesión' : 'Registrarse' }}"
+        (click)="toggleForm = !toggleForm"
+      />
+    </div>
+  </div>
+</div>
