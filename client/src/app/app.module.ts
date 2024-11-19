@@ -2,10 +2,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 
-import {
-  provideHttpClient,
-  withFetch
-} from '@angular/common/http';
+import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -20,6 +17,7 @@ import { DividerModule } from 'primeng/divider';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessagesModule } from 'primeng/messages';
 import { PasswordModule } from 'primeng/password';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 // Local Components
 import { HeaderComponent } from './components/UI/header/header.component';
@@ -51,6 +49,7 @@ import { ProfileView } from './views/profile/profile.component';
     InputTextModule,
     MessagesModule,
     PasswordModule,
+    RadioButtonModule,
     ReactiveFormsModule,
     FormsModule,
   ],

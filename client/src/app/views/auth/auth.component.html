@@ -32,6 +32,18 @@
           [inputStyle]="{ width: '100%' }"
           [style]="{ width: '100%' }"
         />
+        <div class="flex flex-row justify-content-center align-items-center gap-2">
+          <div *ngFor="let category of categories" class="field-checkbox">
+            <p-radioButton
+              [inputId]="category.key"
+              [value]="category.key"
+              formControlName="role"
+            />
+            <label [for]="category.key" class="ml-2">
+              {{ category.name }}
+            </label>
+          </div>
+        </div>
         <p-button
           label="Iniciar sesión"
           styleClass="p-button-primary mt-3 w-full"

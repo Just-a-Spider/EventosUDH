@@ -13,6 +13,11 @@ export class AuthView {
   loginFormGroup!: FormGroup;
   registerFormGroup!: FormGroup;
   messages: Message[] = [];
+  categories: any[] = [
+    { name: 'Estudiante', key: 'student' },
+    { name: 'Coordinador', key: 'coordinator' },
+    { name: 'Poenente', key: 'speaker' },
+  ];
 
   constructor(private authService: AuthService) {}
 
@@ -20,6 +25,7 @@ export class AuthView {
     this.loginFormGroup = new FormGroup({
       email_username: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required]),
+      role: new FormControl('student', [Validators.required]),
     });
 
     this.registerFormGroup = new FormGroup({
@@ -50,7 +56,7 @@ export class AuthView {
     if (this.loginFormGroup.valid) {
       this.authService.login(this.loginFormGroup.value).subscribe({
         next: () => {
-          window.location.href = '/home';
+          window.location.href = '';
         },
         error: (error) => {
           this.messages = [
