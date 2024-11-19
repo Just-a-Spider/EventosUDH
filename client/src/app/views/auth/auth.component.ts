@@ -16,7 +16,7 @@ export class AuthView {
   categories: any[] = [
     { name: 'Estudiante', key: 'student' },
     { name: 'Coordinador', key: 'coordinator' },
-    { name: 'Poenente', key: 'speaker' },
+    { name: 'Ponente', key: 'speaker' },
   ];
 
   constructor(private authService: AuthService) {}

@@ -3,8 +3,6 @@ from rest_framework.views import APIView
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
-from rest_framework.permissions import IsAuthenticated
-from server.middleware.auth import CustomJWTAuthentication
 from server.middleware.auth_classes import role_to_model, serializer_class_map
 from server.utils.user_utils import authenticate_user, set_token_cookie
 from django.db.utils import IntegrityError
