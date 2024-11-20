@@ -13,6 +13,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         # Add custom claims
         user_class = str(user.__class__.__name__)
         token['role'] = user_class.lower()
+        token['username'] = user.username
         return token
 
 # ----------------- Auth ----------------- 
@@ -47,17 +48,26 @@ class LoginSerializer(serializers.Serializer):
     role = serializers.ChoiceField(choices=['student', 'coordinator', 'speaker'])
 
 # ----------------- User -----------------
-class StudentSerializer(serializers.ModelSerializer):
+class BaseUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        abstract = True
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['role'] = instance.__class__.__name__.lower()
+        return data
+
+class StudentSerializer(BaseUserSerializer):
     class Meta:
         model = Student
         fields = ['username', 'email', 'first_name', 'last_name', 'code']
 
-class CoordinatorSerializer(serializers.ModelSerializer):
+class CoordinatorSerializer(BaseUserSerializer):
     class Meta:
         model = Coordinator
         fields = ['username', 'email', 'first_name', 'last_name', 'code']
 
-class SpeakerSerializer(serializers.ModelSerializer):
+class SpeakerSerializer(BaseUserSerializer):
     class Meta:
         model = Speaker
         fields = ['username', 'email', 'first_name', 'last_name', 'bio', 'phone']

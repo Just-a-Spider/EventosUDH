@@ -4,6 +4,7 @@ import { AuthView } from './views/auth/auth.component';
 import { HomeView } from './views/home/home.component';
 import { LandingView } from './views/landing/landing.component';
 import { ProfileView } from './views/profile/profile.component';
+import { EventListComponent } from './components/events/list/list.component';
 
 const routes: Routes = [
   { path: 'landing', component: LandingView },
@@ -11,7 +12,7 @@ const routes: Routes = [
   {
     path: '',
     component: HomeView,
-    children: [],
+    children: [{ path: '', component: EventListComponent }],
   },
   { path: 'me', component: ProfileView },
   { path: '**', redirectTo: 'landing' },

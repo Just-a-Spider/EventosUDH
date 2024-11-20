@@ -1,1 +1,35 @@
-<p>notifications works!</p>
+<p-toast position="bottom-left" />
+<p-button
+  icon="pi pi-bell"
+  label="Notificaciones"
+  [severity]="themesService.buttonStyle.severity"
+  styleClass="p-button-rounded"
+  (click)="getSeenUnseen()"
+/>
+<p-button
+  *ngIf="seenMode && notifications.length > 0"
+  label="Limpiar Notificaciones"
+  (click)="clearSeen()"
+  severity="danger"
+  styleClass="w-full mb-3"
+/>
+@for (noti of notifications; track noti.id){
+<p-card styleClass="mb-3" [header]="noti.title">
+  <p>{{ noti.body }}</p>
+  <div class="flex flex-column gap-2 mt-3">
+    <p-button
+      label="Ir"
+      severity="primary"
+      (click)="goToLicense(noti.instance_id)"
+      styleClass="w-full"
+    />
+    <p-button
+      *ngIf="!seenMode"
+      label="Visto"
+      severity="success"
+      (click)="markSeen(noti.id)"
+      styleClass="w-full"
+    />
+  </div>
+</p-card>
+}

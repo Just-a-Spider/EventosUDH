@@ -1,12 +1,13 @@
-<div class="flex flex-column gap-2">
+<div class="flex flex-column h-screen">
   <ui-header />
-  <div class="flex flex-row">
-    <div class="col-2">
-      <h3>Barra Lateral</h3>
+  <p-divider />
+  <div class="flex flex-row h-full">
+    <div class="col-2 flex justify-content-start">
       <ui-side-bar />
     </div>
-    <div class="col-10 text-center">
-      <h3>Contenido</h3>
+    <p-divider layout="vertical" />
+    <div class="col-10 text-center h-full">
+      <h3>Próximos Eventos</h3>
       <router-outlet />
     </div>
   </div>

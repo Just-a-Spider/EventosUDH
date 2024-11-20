@@ -7,17 +7,11 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-// Interceptors
+// Pipes
+import { CapitalizePipe } from './pipes/capitalize.pipe';
 
 // PrimeNG stuff
-import { AccordionModule } from 'primeng/accordion';
-import { ButtonModule } from 'primeng/button';
-import { CardModule } from 'primeng/card';
-import { DividerModule } from 'primeng/divider';
-import { InputTextModule } from 'primeng/inputtext';
-import { MessagesModule } from 'primeng/messages';
-import { PasswordModule } from 'primeng/password';
-import { RadioButtonModule } from 'primeng/radiobutton';
+import { PrimeNGModule } from './prime-ng.module';
 
 // Local Components
 import { HeaderComponent } from './components/UI/header/header.component';
@@ -27,29 +21,33 @@ import { AuthView } from './views/auth/auth.component';
 import { HomeView } from './views/home/home.component';
 import { LandingView } from './views/landing/landing.component';
 import { ProfileView } from './views/profile/profile.component';
+import { EventListComponent } from './components/events/list/list.component';
+import { EventDetailComponent } from './components/events/detail/detail.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+
+    // Pipes
+    CapitalizePipe,
+
+    // Views
     AuthView,
-    LandingView,
-    SideBarComponent,
     HomeView,
+    ProfileView,
+    LandingView,
+
+    // Components
+    SideBarComponent,
     HeaderComponent,
     NotificationsComponent,
-    ProfileView,
+    EventListComponent,
+    EventDetailComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ButtonModule,
-    CardModule,
-    AccordionModule,
-    DividerModule,
-    InputTextModule,
-    MessagesModule,
-    PasswordModule,
-    RadioButtonModule,
+    PrimeNGModule,
     ReactiveFormsModule,
     FormsModule,
   ],

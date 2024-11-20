@@ -11,8 +11,6 @@ import { AuthService } from '../../../services/auth.service';
 export class SideBarComponent implements OnInit {
   user: User = new User();
 
-  selectedCourseId: string = '';
-
   constructor(private authService: AuthService) {}
 
   ngOnInit() {
@@ -20,11 +18,9 @@ export class SideBarComponent implements OnInit {
   }
 
   getUser() {
-    this.authService.getUser();
     this.authService.user$
       .pipe(
-        filter((user) => user !== null), // Filter out null values
-        take(1) // Ensure the subscription happens only once
+        filter((user) => user.username !== undefined)
       )
       .subscribe({
         next: (user) => {

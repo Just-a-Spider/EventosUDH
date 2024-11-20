@@ -4,7 +4,6 @@ class Faculty(models.Model):
     name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    coordinator = models.ForeignKey('user.Coordinator', on_delete=models.CASCADE, related_name='faculties')
     students = models.ManyToManyField('user.Student', through='FacultyStudent', related_name='faculties')
 
     class Meta:

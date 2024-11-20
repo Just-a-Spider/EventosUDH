@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { User } from '../classes/user.class';
 
 @Injectable({
@@ -10,11 +10,17 @@ import { User } from '../classes/user.class';
 export class AuthService {
   private googleApiUrl = environment.apiUrl + 'oauth/login/google-oauth2/';
   private apiUrl = environment.apiUrl + 'auth/';
-  private userSubject: BehaviorSubject<User | null> =
-    new BehaviorSubject<User | null>(null);
-  user$: Observable<User | null> = this.userSubject.asObservable();
+  private userSubject: BehaviorSubject<User>;
+  user$: Observable<User>;
 
-  constructor(private http: HttpClient) {}
+  setUser(user: User) {
+    this.userSubject.next(user);
+  }
+
+  constructor(private http: HttpClient) {
+    this.userSubject = new BehaviorSubject<User>(new User());
+    this.user$ = this.userSubject.asObservable();
+  }
 
   register(data: any) {
     return this.http.post(`${this.apiUrl}register/`, data, {
@@ -47,18 +53,9 @@ export class AuthService {
       });
   }
 
-  getUser() {
-    this.http
-      .get(`${this.apiUrl}me/`, {
-        withCredentials: true,
-      })
-      .subscribe({
-        next: (response: any) => {
-          this.userSubject.next(response);
-        },
-        error: (error) => {
-          window.location.href = '/auth';
-        },
-      });
+  getUser(): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}me/`, {
+      withCredentials: true,
+    });
   }
 }

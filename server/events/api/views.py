@@ -8,6 +8,13 @@ from faculties.models import Faculty
 from events import models
 from events.api import serializers
 from user.api.serializers import StudentSerializer
+    
+from server.permissions import IsCoordinator
+from rest_framework.permissions import IsAuthenticated
+
+class EventTypeViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.EventTypeModelSerializer
+    permission_classes = [IsAuthenticated, IsCoordinator]
 
 class EventViewSet(viewsets.ModelViewSet):
     queryset = models.Event.objects.all()
@@ -17,25 +24,31 @@ class EventViewSet(viewsets.ModelViewSet):
     # Methods
     def get_serializer_class(self):
         if self.action == 'list':
-            return serializers.SimpleEventModelSerializer
+            return serializers.ListSerializer
         elif self.action == 'create' or self.action == 'update' :
-            return serializers.SimpleEventModelSerializer
-        return serializers.FullEventModelSerializer
+            return serializers.CreateSerializer
+        return serializers.DetailSerializer
     
     def perform_create(self, serializer):
         if (
             self.request.user.__class__ != role_to_model.get('coordinator') 
-            or not 
-            Faculty.objects.filter(coordinator=self.request.user).exists()
         ):
             raise PermissionDenied('You are not allowed to create events')
         serializer.save(
             organizer=self.request.user,
-            faculty = Faculty.objects.get(coordinator=self.request.user),
+            faculty = self.request.user.faculty,
         )
 
     def perform_update(self, serializer):
-        if self.request.user.__class__ != role_to_model.get('coordinator'):
+        event = self.get_object()
+
+        if (
+            self.request.user.__class__ != role_to_model.get('coordinator')
+            or not
+            self.request.user == event.organizer
+            or not
+            self.request.user == event.student_organizer
+        ):
             raise PermissionDenied('You are not allowed to update events')
 
         instance = self.get_object()
@@ -45,7 +58,7 @@ class EventViewSet(viewsets.ModelViewSet):
         fields_to_update = {
             'organizer': self.request.user,
             'faculty': Faculty.objects.get(coordinator=self.request.user),
-            'student_organizer': None
+            'student_organizer': None,
         }
 
         for field, default_value in fields_to_update.items():
@@ -65,6 +78,13 @@ class EventViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['get'], url_path='join-event')
     def join_event(self, request, id):
         event = self.get_object()
+
+        if event.participants.filter(id=request.user.id).exists():
+            return Response(
+                {'message': 'You are already in the event'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
         event.participants.add(request.user)
         return Response(
             {'message': 'You have been added to the event'},
@@ -74,6 +94,13 @@ class EventViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['get'], url_path='leave-event')
     def leave_event(self, request, id):
         event = self.get_object()
+
+        if not event.participants.filter(id=request.user.id).exists():
+            return Response(
+                {'message': 'You are not in the event'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
         event.participants.remove(request.user)
         return Response(
             {'message': 'You have been removed from the event'},
@@ -89,10 +116,3 @@ class EventViewSet(viewsets.ModelViewSet):
             serializer.data,
             status=status.HTTP_200_OK
         )
-    
-from server.permissions import IsCoordinator
-from rest_framework.permissions import IsAuthenticated
-
-class EventTypeViewSet(viewsets.ModelViewSet):
-    serializer_class = serializers.EventTypeModelSerializer
-    permission_classes = [IsAuthenticated, IsCoordinator]

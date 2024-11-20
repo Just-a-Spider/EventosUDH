@@ -1,0 +1,55 @@
+$primaryColor: rgba(#2fbba0, 0.8);
+// Darken the primary color for the dark theme
+$primaryDarkColor: #2fbba0;
+$fontSize: 0.8rem;
+$inputSwitchSliderOnBg: #6f7070;
+$inputSwitchSliderOnHoverBg: #6f7070;
+$inputSwitchSliderOffBg: #edd17e;
+$inputSwitchSliderOffHoverBg: #edd17e;
+$buttonPadding: 0.4rem $fontSize;
+$buttonHoverBg: $primaryDarkColor;
+$buttonHoverBorderColor: $primaryDarkColor;
+$inputTextFontSize: $fontSize;
+$dividerSize: 2px;
+$dividerColor: $primaryDarkColor;
+$dividerHorizontalMargin: 0;
+$dividerHorizontalPadding: 0;
+$dividerVerticalMargin: 0;
+$dividerVerticalPadding: 0;
+$cardTitleFontSize: 0.8rem;
+$cardContentPadding: 0;
+$accordionHeaderBg: none;
+$accordionHeaderBorder: none;
+$accordionHeaderHoverBg: none;
+$accordionHeaderHoverBorderColor: $primaryDarkColor;
+$accordionHeaderActiveBg: none;
+$accordionHeaderActiveBorderColor: $primaryColor;
+$accordionHeaderActiveHoverBg: none;
+$accordionHeaderActiveHoverBorderColor: $primaryColor;
+$accordionContentBorder: none;
+// $inputListBg: #1b1f92;
+// $inputListItemBorderRadius: 10px;
+// $inputListItemHoverBg: #015aa6;
+// $inputListHeaderBg: #015aa6;
+// $borderRadius: 1.2rem;
+// $cardShadow: 0;
+// $cardTitleFontSize: 1rem;
+// $cardSubtitleFontSize: 1rem;
+// $cardContentPadding: 0.1rem;
+// $timelineHorizontalEventContentPadding: 0.5rem;
+// $timelineEventConnectorSize: 4px;
+// $timelineEventColor: $primaryDarkColor;
+// $panelHeaderPadding: 0;
+// $shade600: #ebf7fc; //text secondary color
+// $shade700: #ebf7fc; //text color
+// $dialogHeaderBg: transparent;
+// $dialogHeaderTextColor: $shade700;
+// $dialogHeaderPadding: 0;
+// $dialogContentPadding: 0;
+$tabviewHeaderTextHoverColor: #19d6c2;
+$tabviewHeaderTextActiveColor: #19d6c2;
+$tabviewHeaderSpacing: 0.2rem;
+$fileUploadContentPadding: 0;
+$fileUploadProgressBarHeight: 0;
+
+@import "../node_modules/primeng-sass-theme/themes/lara/lara-light/indigo/theme.scss";

@@ -82,6 +82,17 @@ class CustomBaseUser(AbstractBaseUser, PermissionsMixin):
         )
         token.send_email()
 
+    def send_email(self, subject, message):
+        send_mail(
+            subject=subject,
+            message=message,
+            recipient_list=[self.email],
+            from_email=settings.EMAIL_HOST_USER,
+        )
+
+    def get_full_name(self):
+        return self.first_name + ' ' + self.last_name
+
 class Student(CustomBaseUser):
     code = models.CharField(max_length=10, unique=True)
 
@@ -92,6 +103,16 @@ class Student(CustomBaseUser):
 
 class Coordinator(CustomBaseUser):
     code = models.CharField(max_length=22, unique=True)
+    faculty = models.ForeignKey(
+        'faculties.Faculty', 
+        on_delete=models.CASCADE, 
+        related_name='coordinators', 
+        null=True, 
+        default=None
+    )
+
+    def __str__(self):
+        return self.get_full_name()
 
     class Meta:
         verbose_name = 'Coordinador'
@@ -101,6 +122,9 @@ class Coordinator(CustomBaseUser):
 class Speaker(CustomBaseUser):
     bio = models.TextField()
     phone = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.get_full_name()
     
     class Meta:
         verbose_name = 'Ponente'

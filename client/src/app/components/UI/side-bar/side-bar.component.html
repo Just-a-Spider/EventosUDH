@@ -1,12 +1,14 @@
-<div class="card flex justify-content-center">
-  <p-accordion
-    [activeIndex]="[]"
-    multiple="true"
-    class="w-full"
-    expandIcon="pi pi-plus"
-    collapseIcon="pi pi-minus"
-  >
-    <p-accordionTab header="Mi Cuenta" iconPos="end"></p-accordionTab>
-    <p-accordionTab header="Mis Eventos" iconPos="end"> </p-accordionTab>
-  </p-accordion>
-</div>
+<p-accordion
+  [activeIndex]="[]"
+  multiple="true"
+  class="w-full"
+  expandIcon="pi pi-plus"
+  collapseIcon="pi pi-minus"
+>
+  <p-accordionTab header="Mi Cuenta" iconPos="end">
+    <div class="flex flex-column">
+      <p>{{ user.username }}</p>
+      <p-button label="Editar Perfil" styleClass="w-full mb-3" /></div
+  ></p-accordionTab>
+  <p-accordionTab header="Mis Eventos" iconPos="end"> </p-accordionTab>
+</p-accordion>

@@ -1,0 +1,33 @@
+<div
+  class="flex align-items-center justify-content-center flex-wrap"
+  style="max-width: full; padding: 2rem"
+>
+  @for (event of events; track event.id) {
+  <div
+    class="flex align-items-center justify-content-center m-4"
+    style="width: 15rem"
+  >
+    <p-card [header]="event.title" class="min-w-full min-h-full">
+      <img
+        src="{{ event.promotional_image }}"
+        alt="{{ event.title }}"
+        height="140rem"
+      />
+      <p>{{ event.event_type }}</p>
+      <div class="flex flex-column gap-2">
+        <p-button
+          label="Ir"
+          severity="primary"
+          (click)="seeEvent(event.id!)"
+          styleClass="w-full"
+        ></p-button>
+        <p-button
+          label="Eliminar"
+          severity="danger"
+          styleClass="w-full"
+        ></p-button>
+      </div>
+    </p-card>
+  </div>
+  }
+</div>
