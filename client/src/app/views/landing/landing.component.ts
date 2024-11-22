@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-landing',
   templateUrl: './landing.component.html',
@@ -17,7 +17,7 @@ export class LandingView {
   currentIndex: number = 0;
   currentDescription: string = '';
 
-  constructor() {
+  constructor(private router: Router) {
     this.startRotatingText();
   }
 
@@ -40,11 +40,7 @@ export class LandingView {
         break;
       case 2:
         this.currentDescription =
-          'Contamos el grupo 2 conformado por:andre - jhosep - jorge - johan - ingrid.';
-        break;
-      case 3:
-        this.currentDescription =
-          'somos el grupo 5, negrita dejate ver en la oscuridad -ah -asi no era xd.';
+          'Contamos el grupo 2 conformado por: Andre, Lady y Marcel';
         break;
     }
   }
@@ -55,5 +51,9 @@ export class LandingView {
 
   onHoverEnd() {
     this.buttonText = 'Empezar';
+  }
+
+  goBackToLogin() {
+    this.router.navigate(['/auth']); // Redirige al componente de login
   }
 }

@@ -1,14 +1,18 @@
 <!-- Header -->
 <div class="header">
     <img src="{{ fondo }}" alt="Logo" class="logo">
-    <button class="start-button" (mouseenter)="onHoverStart()" (mouseleave)="onHoverEnd()">
-      {{ buttonText }}
-    </button>
+    <p-button
+  label="Iniciar Sesión"
+  class="start-button"
+  (click)="goBackToLogin()"
+  (mouseenter)="onHoverStart()"
+  (mouseleave)="onHoverEnd()"
+></p-button>
 </div>
 
 <!-- Hero ()-->
 <div class="hero-section">
-    <h1>Bienvenidos a Tutorías para Todos</h1>
+    <h1>Bienvenidos a EventosUDH para Todos</h1>
     <div class="rotating-text">
         <p>{{ rotatingText[currentIndex] }}</p>
     </div>
