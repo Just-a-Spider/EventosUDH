@@ -1,0 +1,36 @@
+<div class="flex justify-content-center align-items-center min-h-screen bg-dark">
+  <div class="surface-card shadow-4 border-round-lg p-4 w-full sm:w-10 md:w-6 lg:w-4">
+    <h2 class="text-primary font-bold mb-3 text-center">CAMBIAR CONTRASEÑA</h2>
+    <p class="text-center mb-4">
+      Ingresa tu nueva contraseña y confírmala para restablecer tu acceso.
+    </p>
+    <form  class="flex flex-column gap-3">
+      <div class="field w-full">
+        <p-password
+          formControlName="new_password"
+          placeholder="Nueva contraseña"
+          [feedback]="true"
+          class="border-bottom w-full"
+        ></p-password>
+      </div>
+      <div class="field w-full">
+        <p-password
+          formControlName="confirm_password"
+          placeholder="Confirmar nueva contraseña"
+          [feedback]="true"
+          class="border-bottom w-full"
+        ></p-password>
+      </div>
+      <p-button
+        label="Guardar nueva contraseña"
+        styleClass="p-button-primary w-full"
+
+      ></p-button>
+    </form>
+    <p class="text-center mt-4">
+      <span class="text-primary cursor-pointer" (click)="goBackToLogin()">
+        Volver al inicio de sesión
+      </span>
+    </p>
+  </div>
+</div>

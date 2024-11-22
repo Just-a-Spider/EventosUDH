@@ -23,6 +23,8 @@ import { LandingView } from './views/landing/landing.component';
 import { ProfileView } from './views/profile/profile.component';
 import { EventListComponent } from './components/events/list/list.component';
 import { EventDetailComponent } from './components/events/detail/detail.component';
+import { RestorePassView } from './views/restore-pass/restore-pass.component';
+
 
 @NgModule({
   declarations: [
@@ -36,6 +38,7 @@ import { EventDetailComponent } from './components/events/detail/detail.componen
     HomeView,
     ProfileView,
     LandingView,
+    RestorePassView,
 
     // Components
     SideBarComponent,
@@ -43,6 +46,7 @@ import { EventDetailComponent } from './components/events/detail/detail.componen
     NotificationsComponent,
     EventListComponent,
     EventDetailComponent,
+    RestorePassView,
   ],
   imports: [
     BrowserModule,
