@@ -1,14 +1,5 @@
-<div class="flex flex-column h-screen">
-  <ui-header />
-  <p-divider />
-  <div class="flex flex-row h-full">
-    <div class="col-2 flex justify-content-start">
-      <ui-side-bar />
-    </div>
-    <p-divider layout="vertical" />
-    <div class="col-10 text-center h-full">
-      <h3>Próximos Eventos</h3>
-      <router-outlet />
-    </div>
-  </div>
+<div
+  class="flex flex-column justify-content-start align-items-center h-screen overflow-y-auto"
+>
+  <router-outlet />
 </div>

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, filter, Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
 import {
   FullNotification,
@@ -26,31 +26,54 @@ export class NotificationsService {
   }
 
   private async connect() {
-    this.authService.getUser().subscribe({
-      next: (user: User) => {
-        const username = user.username;
-        const wsUrl = `${this.socketUrl}${username}/`;
+    this.authService.user$
+      .pipe(filter((user) => user.username !== undefined))
+      .subscribe({
+        next: (user: User) => {
+          const username = user.username;
+          const wsUrl = `${this.socketUrl}${username}/`;
 
-        this.socket = new WebSocket(wsUrl);
+          // Check if there's an existing connection in session storage
+          const existingConnection = sessionStorage.getItem('wsConnection');
+          if (
+            existingConnection &&
+            this.socket &&
+            this.socket.readyState === WebSocket.OPEN
+          ) {
+            return;
+          }
 
-        this.socket.onopen = (event) => {};
+          this.socket = new WebSocket(wsUrl);
 
-        this.socket.onmessage = (event) => {
-          let message = JSON.parse(event.data);
-          this.notificationSubject.next(message);
-          this.getNotifications().subscribe(); // Re-fetch notifications
-        };
+          this.socket.onopen = (event) => {
+            // Save the connection state in session storage
+            sessionStorage.setItem('wsConnection', 'open');
+          };
 
-        this.socket.onerror = (event) => {
-          console.error('WebSocket error:', event);
-        };
-      },
-      error: (error) => {
-        console.error(error);
-      },
-    });
+          this.socket.onmessage = (event) => {
+            let message = JSON.parse(event.data);
+            this.notificationSubject.next(message);
+            this.getNotifications().subscribe(); // Re-fetch notifications
+          };
+
+          this.socket.onclose = (event) => {
+            // Remove the connection state from session storage
+            sessionStorage.removeItem('wsConnection');
+            // Attempt to reconnect
+            setTimeout(() => {
+              this.connect();
+            }, 1000); // Reconnect after 1 second
+          };
+
+          this.socket.onerror = (event) => {
+            console.error('WebSocket error:', event);
+          };
+        },
+        error: (error) => {
+          console.error(error);
+        },
+      });
   }
-
   close() {
     if (this.socket) {
       this.socket.close();

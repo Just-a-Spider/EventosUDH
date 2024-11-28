@@ -19,9 +19,7 @@ export class SideBarComponent implements OnInit {
 
   getUser() {
     this.authService.user$
-      .pipe(
-        filter((user) => user.username !== undefined)
-      )
+      .pipe(filter((user) => user !== undefined))
       .subscribe({
         next: (user) => {
           this.user = user;

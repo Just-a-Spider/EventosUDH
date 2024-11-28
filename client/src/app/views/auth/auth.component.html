@@ -1,29 +1,40 @@
-<!-- Content goes here -->
-<div class="flex justify-content-center align-items-center h-screen">
+<div
+  class="flex justify-content-center align-items-center min-h-screen bg-dark"
+>
   <div
-    class="flex flex-column align-items-center justify-content-center w-full md:w-5 lg:w-4 card p-3"
+    class="surface-card shadow-4 border-round-lg overflow-hidden w-full sm:w-10 md:w-8 lg:w-6 flex flex-column md:flex-row"
   >
-    <h2 class="text-center">Nombre de la Aplicación</h2>
-    <div class="card w-full p-4">
+    <!-- Form Section -->
+    <div class="p-4 w-full md:w-6">
+      <h2 class="text-primary font-bold mb-2 text-center">
+        {{ toggleForm ? "REGÍSTRATE" : "BIENVENIDO" }}
+      </h2>
+      <p class="text-center mb-3">
+        {{ toggleForm ? "¿Ya tienes una cuenta? " : "¿No tienes una cuenta? " }}
+        <span
+          class="text-primary cursor-pointer"
+          (click)="toggleForm = !toggleForm"
+        >
+          {{ toggleForm ? "Inicia Sesión aquí" : "Regístrate aquí" }}
+        </span>
+      </p>
       <p-button
+        icon="pi pi-google"
         label="Iniciar sesión con Google"
-        styleClass="w-full mt-3"
+        styleClass="w-full my-3 p-button"
         (click)="googleLogin()"
-      />
-      <h2 class="mb-3">{{ toggleForm ? "Regístrate" : "Bienvenido" }}</h2>
-      <!-- Form for login or register -->
+      ></p-button>
+
+      <!-- Toggle Form -->
       @if (toggleForm === false) {
       <!-- Login Form -->
-      @if (messages.length > 0) {
-      <p-messages [(value)]="messages" [closable]="false" />
-      }
-      <form [formGroup]="loginFormGroup" class="flex flex-column gap-2 w-full">
+      <form [formGroup]="loginFormGroup" class="flex flex-column gap-2">
         <input
           type="text"
           pInputText
           formControlName="email_username"
           placeholder="Correo o Código de Estudiante"
-          class="p-inputtext w-full"
+          class="w-full"
         />
         <p-password
           formControlName="password"
@@ -32,89 +43,83 @@
           [inputStyle]="{ width: '100%' }"
           [style]="{ width: '100%' }"
         />
-        <div class="flex flex-row justify-content-center align-items-center gap-2">
+        <div class="flex justify-content-between gap-3 align-items-center mt-2">
           <div *ngFor="let category of categories" class="field-checkbox">
             <p-radioButton
               [inputId]="category.key"
               [value]="category.key"
               formControlName="role"
-            />
-            <label [for]="category.key" class="ml-2">
-              {{ category.name }}
-            </label>
+            ></p-radioButton>
+            <label [for]="category.key" class="ml-1">{{ category.name }}</label>
           </div>
         </div>
         <p-button
           label="Iniciar sesión"
           styleClass="p-button-primary mt-3 w-full"
           (click)="login()"
-        />
+        ></p-button>
         <p-button
           label="Olvidé mi contraseña"
-          styleClass="p-button-primary mt-3 w-full"
+          styleClass="p-button-secondary mt-2 w-full"
           (click)="forgotPassword()"
-        />
+        ></p-button>
       </form>
       } @else {
       <!-- Register Form -->
-      <form
-        [formGroup]="registerFormGroup"
-        class="flex flex-column gap-2 w-full"
-      >
-        <!-- Row 2: Correo (Full width) -->
+      <form [formGroup]="registerFormGroup" class="flex flex-column gap-3">
         <input
           type="text"
           pInputText
           formControlName="email"
           placeholder="Correo"
-          class="p-inputtext w-full"
+          class="w-full"
         />
-        <!-- Row 3: Nombres and Apellidos (side by side) -->
-        <div class="flex gap-2">
+        <div class="flex flex-row gap-2">
           <input
             type="text"
             pInputText
             formControlName="first_name"
             placeholder="Nombres"
-            class="p-inputtext w-full"
+            class="p-inputtext border-bottom w-full"
           />
           <input
             type="text"
             pInputText
             formControlName="last_name"
             placeholder="Apellidos"
-            class="p-inputtext w-full"
+            class="p-inputtext border-bottom w-full"
           />
         </div>
-        <!-- Row 4: Contraseña (Full width) -->
         <p-password
           formControlName="password"
           placeholder="Contraseña"
           [feedback]="true"
           [inputStyle]="{ width: '100%' }"
           [style]="{ width: '100%' }"
-        ></p-password>
+        />
         <p-password
           formControlName="confirm_password"
           placeholder="Confirmar contraseña"
           [feedback]="true"
           [inputStyle]="{ width: '100%' }"
           [style]="{ width: '100%' }"
-        ></p-password>
-        <!-- Button: Register -->
-        <button
-          pButton
-          type="submit"
+        />
+        <p-button
           label="Registrarse"
+          styleClass="w-full"
           (click)="register()"
-          class="w-full mt-3"
-        ></button>
+        ></p-button>
       </form>
       }
-      <p-button
-        styleClass="p-button-secondary mt-3 w-full"
-        label="Cambiar a {{ toggleForm ? 'Iniciar sesión' : 'Registrarse' }}"
-        (click)="toggleForm = !toggleForm"
+    </div>
+    <!-- Image Section -->
+    <div
+      class="w-full md:w-6 bg-primary-light flex align-items-center justify-content-center"
+    >
+      <img
+        src="https://via.placeholder.com/400"
+        alt="Universidad"
+        class="w-10 md:w-8 border-round-md"
       />
     </div>
   </div>

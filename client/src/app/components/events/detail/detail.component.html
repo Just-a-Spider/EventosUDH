@@ -1,1 +1,54 @@
-<p>detail works!</p>
+<p-scrollPanel
+  [style]="{
+    width: '90vw',
+    height: '80vh',
+    margin: '1rem',
+    padding: '2rem'
+  }"
+>
+  <!-- Header -->
+  <div class="flex flex-row justify-content-between align-items-center w-full">
+    <p-button label="Regresar" icon="pi pi-arrow-left" (click)="goBack()" />
+    <p-button
+      [label]="
+        currentEvent.is_participant! === true
+          ? 'Dejar de Participar'
+          : 'Participar'
+      "
+      [icon]="
+        currentEvent.is_participant! === true
+          ? 'pi pi-user-minus'
+          : 'pi pi-user-plus'
+      "
+      (click)="joinLeaveEvent()"
+    />
+    <event-clock [targetDate]="eventDate" />
+  </div>
+  <!-- Body -->
+  <h2 class="text-center">{{ currentEvent.title }}</h2>
+  <div class="flex flex-row justify-content-between gap-2 w-full">
+    <!-- Event Data -->
+    <div class="flex flex-row gap-2">
+      <!-- Event Image -->
+      <p-image
+        [src]="currentEvent.promotional_image"
+        alt="{{ currentEvent.title }}"
+        width="400rem"
+        height="auto"
+      />
+      <!-- Event Details -->
+      <div>
+        <h3>Description del Evento</h3>
+        <p>{{ currentEvent.description }}</p>
+        <p-divider />
+      </div>
+    </div>
+    <!-- Event Speakers -->
+    <event-speakers
+      *ngIf="currentEvent.speakers!.length !== 0"
+      [speakers]="currentEvent.speakers!"
+    />
+    <!-- Event Participants -->
+    <event-participants [participants]="participants" />
+  </div>
+</p-scrollPanel>

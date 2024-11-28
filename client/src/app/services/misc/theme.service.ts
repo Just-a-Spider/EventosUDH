@@ -1,6 +1,5 @@
 import { DOCUMENT } from '@angular/common';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { ButtonInterface, BUTTONS } from '../../interfaces/ui.interface';
 
 @Injectable({
@@ -11,13 +10,13 @@ export class ThemeService {
   buttonStyle: ButtonInterface;
 
   constructor() {
-    const savedMode = localStorage.getItem('profileMode');
+    const savedMode = localStorage.getItem('role');
     if (savedMode === 'coordinator' || savedMode === 'speaker') {
       const currentMode = savedMode;
       this.buttonStyle =
         BUTTONS.find((button) => button.mode === currentMode) || BUTTONS[0];
     } else {
-      localStorage.setItem('profileMode', 'student');
+      localStorage.setItem('role', 'student');
       this.buttonStyle = BUTTONS[0];
     }
   }

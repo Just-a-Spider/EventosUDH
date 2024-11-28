@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { ButtonInterface, BUTTONS } from '../../../interfaces/ui.interface';
-import { ThemeService } from '../../../services/misc/theme.service';
+import { ButtonInterface } from '../../../interfaces/ui.interface';
 import { AuthService } from '../../../services/auth.service';
-import { User } from '../../../classes/user.class';
+import { ThemeService } from '../../../services/misc/theme.service';
 
 @Component({
   selector: 'ui-header',
@@ -10,27 +9,33 @@ import { User } from '../../../classes/user.class';
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
-  mode: string;
   selButtonStyle: ButtonInterface;
   isDarkMode = true;
+  displayNotis = false;
+  isOnAuth = true;
+  role: string = localStorage.getItem('role') as string;
 
   constructor(
     private authService: AuthService,
     private themeService: ThemeService
   ) {
-    this.authService.getUser().subscribe({
-      next: (user) => {
-        this.authService.setUser(user);
-      },
-      error: () => {
-        window.location.href = '/auth';
-      },
-    });
+    this.isOnAuth = window.location.pathname === '/auth';
+    if (!this.isOnAuth) {
+      this.authService.user$.subscribe({
+        next: (user) => {
+          this.isOnAuth = false;
+          localStorage.setItem('role', user.role!);
+          this.role = user.role!;
+        },
+        error: () => {
+          this.isOnAuth = true;
+        },
+      });
+    }
     this.isDarkMode = localStorage.getItem('theme') === 'true';
     if (!this.isDarkMode) {
       this.themeService.changeTheme();
     }
-    this.mode = localStorage.getItem('profileMode') || 'student';
     this.selButtonStyle = themeService.buttonStyle;
   }
 
