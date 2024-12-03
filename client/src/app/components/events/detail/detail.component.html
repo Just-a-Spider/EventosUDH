@@ -11,12 +11,12 @@
     <p-button label="Regresar" icon="pi pi-arrow-left" (click)="goBack()" />
     <p-button
       [label]="
-        currentEvent.is_participant! === true
+        event.is_participant! === true
           ? 'Dejar de Participar'
           : 'Participar'
       "
       [icon]="
-        currentEvent.is_participant! === true
+        event.is_participant! === true
           ? 'pi pi-user-minus'
           : 'pi pi-user-plus'
       "
@@ -25,28 +25,28 @@
     <event-clock [targetDate]="eventDate" />
   </div>
   <!-- Body -->
-  <h2 class="text-center">{{ currentEvent.title }}</h2>
+  <h2 class="text-center">{{ event.title }}</h2>
   <div class="flex flex-row justify-content-between gap-2 w-full">
     <!-- Event Data -->
-    <div class="flex flex-row gap-2">
+    <div class="flex flex-row gap-4">
       <!-- Event Image -->
       <p-image
-        [src]="currentEvent.promotional_image"
-        alt="{{ currentEvent.title }}"
-        width="400rem"
+        [src]="event.promotional_image"
+        alt="{{ event.title }}"
+        width="300rem"
         height="auto"
       />
       <!-- Event Details -->
       <div>
         <h3>Description del Evento</h3>
-        <p>{{ currentEvent.description }}</p>
+        <p>{{ event.description }}</p>
         <p-divider />
       </div>
     </div>
     <!-- Event Speakers -->
     <event-speakers
-      *ngIf="currentEvent.speakers!.length !== 0"
-      [speakers]="currentEvent.speakers!"
+      *ngIf="event.speakers!.length !== 0"
+      [speakers]="event.speakers!"
     />
     <!-- Event Participants -->
     <event-participants [participants]="participants" />

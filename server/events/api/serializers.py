@@ -52,8 +52,6 @@ class ListSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data['start_date'] = instance.start_date.strftime('%Y-%m-%d %H:%M')
-        data['end_date'] = instance.end_date.strftime('%Y-%m-%d %H:%M')
         data['speakers'] = EventSpeakerModelSerializer(instance.speakers.all(), many=True).data
         return data
 
@@ -69,7 +67,6 @@ class DetailSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data['start_date'] = instance.start_date.strftime('%Y-%m-%d %H:%M')
-        data['end_date'] = instance.end_date.strftime('%Y-%m-%d %H:%M')
         data['created_at'] = instance.created_at.strftime('%Y-%m-%d %H:%M')
+        data['is_participant'] = instance.participants.filter(id=self.context['request'].user.id).exists()
         return data

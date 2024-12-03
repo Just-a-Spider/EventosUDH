@@ -12,6 +12,7 @@ export class HeaderComponent {
   selButtonStyle: ButtonInterface;
   isDarkMode = true;
   displayNotis = false;
+  displayCreateEvent = false;
   isOnAuth = true;
   role: string = localStorage.getItem('role') as string;
 

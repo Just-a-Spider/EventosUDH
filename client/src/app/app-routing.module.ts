@@ -20,7 +20,7 @@ const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: '', component: EventListComponent },
-      { path: 'detail', component: EventDetailComponent },
+      { path: 'detail/:id', component: EventDetailComponent },
       { path: 'new', component: NewEventComponent },
     ],
   },

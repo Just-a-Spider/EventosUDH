@@ -1,1 +1,97 @@
-<p>new works!</p>
+<form
+  [formGroup]="eventForm"
+  (ngSubmit)="onSubmit()"
+  class="flex flex-column justify-content-center align-items-center gap-2"
+>
+  <div class="flex flex-column">
+    <label for="title">Title:</label>
+    <input id="title" pInputText formControlName="title" type="text" required />
+  </div>
+  <div class="flex flex-column">
+    <label for="description">Description:</label>
+    <textarea
+      id="description"
+      pInputTextarea
+      formControlName="description"
+      required
+    ></textarea>
+  </div>
+  <div class="flex flex-column">
+    <label for="start_date">Start Date:</label>
+    <p-calendar
+      id="start_date"
+      formControlName="start_date"
+      dateFormat="yy-mm-dd"
+      required
+    ></p-calendar>
+  </div>
+  <div class="flex flex-column">
+    <label for="end_date">End Date:</label>
+    <p-calendar
+      id="end_date"
+      formControlName="end_date"
+      dateFormat="yy-mm-dd"
+      required
+    ></p-calendar>
+  </div>
+  <div class="flex flex-column">
+    <label for="location">Location:</label>
+    <input
+      id="location"
+      pInputText
+      formControlName="location"
+      type="text"
+      required
+    />
+  </div>
+  <div class="flex flex-column">
+    <label for="promotional_image">Promotional Image:</label>
+    <p-fileUpload
+      id="promotional_image"
+      formControlName="promotional_image"
+      mode="basic"
+      name="file"
+      accept="image/*"
+    ></p-fileUpload>
+  </div>
+  <div class="flex flex-column">
+    <label for="organizer">Organizer:</label>
+    <input
+      id="organizer"
+      pInputText
+      formControlName="organizer"
+      type="text"
+      required
+    />
+  </div>
+  <div class="flex flex-column">
+    <label for="student_organizer">Student Organizer:</label>
+    <input
+      id="student_organizer"
+      pInputText
+      formControlName="student_organizer"
+      type="text"
+      required
+    />
+  </div>
+  <div class="flex flex-column">
+    <label for="event_type">Event Type:</label>
+    <input
+      id="event_type"
+      pInputText
+      formControlName="event_type"
+      type="text"
+      required
+    />
+  </div>
+  <div class="flex flex-column">
+    <label for="speakers">Speakers:</label>
+    <textarea
+      id="speakers"
+      pInputTextarea
+      formControlName="speakers"
+      required
+    ></textarea>
+  </div>
+  <button pButton type="submit" label="Create Event"></button>
+</form>

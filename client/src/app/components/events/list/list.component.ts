@@ -25,9 +25,6 @@ export class EventListComponent {
   }
 
   seeEvent(eventId: string) {
-    this.eventsService.getEvent(eventId).subscribe((event) => {
-      this.eventsService.setCurrentEvent(event);
-      this.router.navigate(['/detail']);
-    });
+    this.router.navigate(['/detail/', eventId]);
   }
 }

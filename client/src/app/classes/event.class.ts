@@ -30,3 +30,16 @@ export class FullEvent {
   end_date?: string;
   created_at?: string;
 }
+
+export interface CreateEvent {
+  title: string;
+  description: string;
+  start_date: string;
+  end_date: string;
+  location: string;
+  promotional_image: File | null;
+  organizer: string;
+  student_organizer: string;
+  event_type: string;
+  speakers: EventSpeaker[];
+}

@@ -6,7 +6,7 @@ from rest_framework.decorators import action
 
 class NotificationList(viewsets.ModelViewSet):
     serializer_class = NotificationSerializer
-    filter_fields = ['seen']
+    filter_fields = ['seen'] 
     lookup_field = 'id'
 
     def get_queryset(self):

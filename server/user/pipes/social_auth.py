@@ -3,8 +3,48 @@ from django.conf import settings
 from django.db import transaction
 from django.utils import timezone
 from django.http import HttpResponse
+from django.contrib.auth.hashers import make_password
 from user.api.serializers import CustomTokenObtainPairSerializer
 from faculties.models import Faculty, FacultyStudent
+from django.shortcuts import redirect
+
+
+from social_core.pipeline.partial import partial
+from user.models import Student
+@partial
+def create_student(backend, user=None, response=None, *args, **kwargs):
+    if user:
+        return {'user': user}
+
+    email = response.get('email')
+    first_name = response.get('given_name')
+    last_name = response.get('family_name')
+    username = response.get('email').split('@')[0]
+
+    # Create an encrypted password
+    password = make_password(None)
+
+    # Check if a Student with the given username already exists
+    student, created = Student.objects.get_or_create(
+        username=username,
+        defaults={
+            'email': email,
+            'first_name': first_name,
+            'last_name': last_name,
+            'code': username,
+            'password': password
+        }
+    )
+
+    return {'user': student}
+
+
+from social_core.pipeline.social_auth import associate_user as social_associate_user
+def associate_student(backend, uid, user=None, social=None, *args, **kwargs):
+    if user:
+        return {'social': social}
+
+    return social_associate_user(backend, uid, user, social, *args, **kwargs)
 
 def login_success_response(user):
     refresh = CustomTokenObtainPairSerializer.get_token(user)
@@ -13,7 +53,7 @@ def login_success_response(user):
     user.last_login = timezone.now()
     user.save()
 
-    response = HttpResponse('Login successful')
+    response = redirect(settings.LOGIN_REDIRECT_URL)
     response.set_cookie(
         key=settings.SIMPLE_JWT['AUTH_COOKIE'],
         value=str(access_token),
@@ -49,6 +89,10 @@ def fetch_google_classroom_courses(backend, user, response, *args, **kwargs):
     response = requests.get(courses_url, headers=headers)
     if response.status_code != 200:
         return
+
+    # Ensure the user is a Student instance
+    if not isinstance(user, Student):
+        raise ValueError(f"Cannot query {user}: Must be a 'Student' instance.")
 
     courses_data = response.json().get('courses', [])
 

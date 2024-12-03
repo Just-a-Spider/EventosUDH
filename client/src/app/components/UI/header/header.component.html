@@ -21,6 +21,7 @@
       label="Nuevo Evento"
       [severity]="selButtonStyle.severity"
       styleClass="p-button-rounded"
+      (click)="displayCreateEvent = true"
     />
     <header-notis />
     <p-button
@@ -38,3 +39,10 @@
     />}
   </div>
 </div>
+<p-dialog
+  header="Crear Evento"
+  [(visible)]="displayCreateEvent"
+  [style]="{ width: '50%' }"
+>
+  <event-create-form />
+</p-dialog>

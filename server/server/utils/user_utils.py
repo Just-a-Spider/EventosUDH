@@ -25,7 +25,7 @@ def login_success_response(user):
     user.last_login = timezone.now()
     user.save()
 
-    response = Response({'detail': 'Login successful'})
+    response = Response({'detail': 'Login successful', 'role': user.__class__.__name__.lower()})
     response.set_cookie(
         key=settings.SIMPLE_JWT['AUTH_COOKIE'],
         value=str(access_token),
