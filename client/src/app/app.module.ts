@@ -2,7 +2,11 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withFetch,
+  withInterceptors,
+} from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -29,6 +33,7 @@ import { HomeView } from './views/home/home.component';
 import { LandingView } from './views/landing/landing.component';
 import { ProfileView } from './views/profile/profile.component';
 import { ResetPasswordView } from './views/reset-password/reset-password.component';
+import { apiKeyInterceptor } from './interceptors/api-key.interceptor';
 
 @NgModule({
   declarations: [
@@ -63,7 +68,10 @@ import { ResetPasswordView } from './views/reset-password/reset-password.compone
     ReactiveFormsModule,
     FormsModule,
   ],
-  providers: [provideHttpClient(withFetch()), provideAnimationsAsync()],
+  providers: [
+    provideHttpClient(withFetch(), withInterceptors([apiKeyInterceptor])),
+    provideAnimationsAsync(),
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
