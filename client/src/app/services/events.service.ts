@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { CreateEvent, FullEvent, SimpleEvent } from '../classes/event.class';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { CreateEvent, FullEvent } from '../classes/event.class';
 import { User } from '../classes/user.class';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',

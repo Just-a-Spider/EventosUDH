@@ -33,6 +33,23 @@ else:
     CORS_ALLOW_ALL_ORIGINS = True
     CORS_ALLOW_CREDENTIALS = True
 
+CORS_ALLOW_HEADERS = [
+    'content-type',
+    'authorization',
+    'x-api-key',  # Add the X-API-KEY header here
+    'x-requested-with',
+    'accept',
+    'origin',
+    'user-agent',
+    'dnt',
+    'cache-control',
+    'x-csrftoken',
+    'x-frame-options',
+]
+
+# API Key
+API_KEY = os.getenv('API_KEY')
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -78,6 +95,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',  # Google Auth
 ]
+
+if os.getenv('EAK', 'False') == 'True':
+    MIDDLEWARE.append(
+        'server.middleware.api_key.APIKeyMiddleware',  # API Key
+    )
 
 # Test config
 # TEST_RUNNER = 'server.utils.test_runner.CustomTestRunner'
