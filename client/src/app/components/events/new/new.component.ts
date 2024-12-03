@@ -4,7 +4,7 @@ import { CreateEvent, FullEvent } from '../../../classes/event.class';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'event--form',
+  selector: 'event-form',
   templateUrl: './new.component.html',
   styleUrl: './new.component.scss',
 })
