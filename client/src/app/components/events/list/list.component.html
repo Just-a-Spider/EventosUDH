@@ -74,7 +74,7 @@
   [style]="{ width: '55vw', 'overflow-x': 'hidden' }"
   [modal]="true"
 >
-  <event-detail [event]="currentEvent" />
+  <event-detail [event]="currentEvent" [participants]="participants" />
 </p-dialog>
 <p-dialog
   *ngIf="role === 'coordinator'"

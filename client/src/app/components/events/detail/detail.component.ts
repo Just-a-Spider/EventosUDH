@@ -11,8 +11,8 @@ import { Router } from '@angular/router';
 })
 export class EventDetailComponent {
   @Input() event: FullEvent = new FullEvent();
+  @Input() participants: User[] = [];
   eventDate = new Date();
-  participants: User[] = [];
 
   constructor(private router: Router, private eventsService: EventsService) {}
 
@@ -26,7 +26,7 @@ export class EventDetailComponent {
       },
     });
   }
-
+  
   joinLeaveEvent() {
     this.eventsService
       .toggleEventParticipation(this.event.id!, !this.event.is_participant!)

@@ -3,6 +3,7 @@ import { FullEvent, SimpleEvent } from '../../../classes/event.class';
 import { AuthService } from '../../../services/auth.service';
 import { EventsService } from '../../../services/events.service';
 import { NavigationEnd, Router } from '@angular/router';
+import { User } from '../../../classes/user.class';
 
 @Component({
   selector: 'event-list',
@@ -22,6 +23,7 @@ export class EventListComponent implements OnInit {
   totalItems = 0;
   currentPage = 1;
   title: string;
+  participants: User[] = [];
 
   constructor(
     private router: Router,
@@ -84,14 +86,24 @@ export class EventListComponent implements OnInit {
     this.loadEvents();
   }
 
+  getParticipants() {
+    this.eventsService.getParticipants(this.currentEvent.id!).subscribe({
+      next: (participants) => {
+        this.participants = participants;
+      },
+      error: (error) => {
+        console.error(error);
+      },
+    });
+  }
+
   seeEditEvent(eventId: string, edit = false) {
     this.eventsService.getEvent(eventId).subscribe({
       next: (event) => {
         this.currentEvent = event;
+        this.getParticipants();
         if (edit) {
           this.displayEdit = true;
-          console.log('Edit event');
-          console.log(this.currentEvent);
         } else {
           this.displayEvent = true;
         }
