@@ -1,9 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CreateEvent, FullEvent } from '../classes/event.class';
-import { User } from '../classes/user.class';
 import { environment } from '../../environments/environment';
+import { FullEvent } from '../classes/event.class';
+import { User } from '../classes/user.class';
 
 @Injectable({
   providedIn: 'root',
@@ -13,8 +13,16 @@ export class EventsService {
 
   constructor(private http: HttpClient) {}
 
-  getEvents(): Observable<any> {
-    return this.http.get<any>(this.apiUrl, { withCredentials: true });
+  // General Actions
+  getEvents(limit: number, offset: number, myEvents: boolean): Observable<any> {
+    let endpoint = myEvents ? 'my-events/' : '';
+    let params = new HttpParams()
+      .set('limit', limit.toString())
+      .set('offset', offset.toString());
+    return this.http.get<any>(`${this.apiUrl}${endpoint}`, {
+      params,
+      withCredentials: true,
+    });
   }
 
   getEvent(id: string): Observable<FullEvent> {
@@ -23,8 +31,14 @@ export class EventsService {
     });
   }
 
-  createEvent(event: CreateEvent): Observable<FullEvent> {
+  createEvent(event: any): Observable<FullEvent> {
     return this.http.post<FullEvent>(this.apiUrl, event, {
+      withCredentials: true,
+    });
+  }
+
+  editEvent(eventId: string, event: any): Observable<FullEvent> {
+    return this.http.put<FullEvent>(`${this.apiUrl}${eventId}/`, event, {
       withCredentials: true,
     });
   }
@@ -40,6 +54,22 @@ export class EventsService {
     const action = join ? 'join-event' : 'leave-event';
     return this.http.get(`${this.apiUrl}${eventId}/${action}/`, {
       withCredentials: true,
+    });
+  }
+
+  // Special Actions
+  getSpeakers(): Observable<User[]> {
+    return this.http.get<User[]>(`${environment.apiUrl}speakers/`, {
+      withCredentials: true,
+    });
+  }
+
+  getEventTypes(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}event-types/`, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     });
   }
 }

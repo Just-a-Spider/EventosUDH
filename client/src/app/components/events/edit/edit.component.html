@@ -1,0 +1,227 @@
+<div
+  class="flex flex-column w-full justify-content-between align-items-center gap-4"
+>
+  <!-- Main Encapsulator -->
+  <div
+    class="w-full flex flex-row gap-6 justify-content-center align-items-start p-2"
+  >
+    <!-- Promo Image to the left -->
+    <div class="w-full flex flex-column gap-2">
+      <h3>Imagen Promocional</h3>
+      <p-fileUpload
+        #fileUpload
+        mode="basic"
+        name="file"
+        chooseLabel="Cambiar Imagen"
+        [auto]="true"
+        accept="image/*"
+        customUpload="true"
+        (uploadHandler)="uploadImage($event, fileUpload)"
+      ></p-fileUpload>
+      <p-image
+        [src]="event.promotional_image"
+        height="auto"
+        width="80%"
+      ></p-image>
+    </div>
+    <!-- Event Data to the center -->
+    <div class="w-full flex flex-column gap-4 justify-content-start">
+      <h3>Información del Evento</h3>
+      <div class="flex flex-column gap-2 w-full">
+        <label for="title">Título del Evento</label>
+        <input
+          id="title"
+          pInputText
+          [(ngModel)]="event.title"
+          type="text"
+          class="w-full"
+        />
+      </div>
+      <div class="flex flex-column gap-2 w-full">
+        <label for="description">Descripción</label>
+        <textarea
+          id="description"
+          pInputTextarea
+          [(ngModel)]="event.description"
+        ></textarea>
+      </div>
+      <!-- CheckBox to set the event as Virtual or not -->
+      <div class="flex flex-row gap-2">
+        <div class="flex flex-column gap-2 w-full">
+          <label for="virtualEvent">¿Virtual?</label>
+          <p-checkbox
+            id="virtualEvent"
+            [(ngModel)]="virtualEvent"
+            binary="true"
+          ></p-checkbox>
+        </div>
+        <div *ngIf="!virtualEvent" class="flex flex-column gap-2 w-full">
+          <label for="location">Lugar</label>
+          <input
+            id="location"
+            pInputText
+            [(ngModel)]="event.location"
+            type="text"
+          />
+        </div>
+      </div>
+      <div class="flex flex-row gap-2">
+        <div class="flex flex-column gap-2 w-full">
+          <label for="studentOrganizer">¿Organizado por un Estudiante?</label>
+          <p-checkbox
+            id="studentOrganizer"
+            binary="true"
+          ></p-checkbox>
+        </div>
+        <div *ngIf="studentOrganizer" class="flex flex-column gap-2 w-full">
+          <label for="student_organizer">Estudiante Organizador</label>
+          <input
+            id="student_organizer"
+            pInputText
+            [(ngModel)]="event.student_organizer"
+            type="text"
+          />
+        </div>
+      </div>
+      <div class="flex flex-column gap-2 w-full">
+        <label for="event_type">Categoria de Evento</label>
+        <p-dropdown
+          id="event_type"
+          [(ngModel)]="event.event_type"
+          [options]="eventCategories"
+          optionLabel="name"
+          optionValue="id"
+          placeholder="Seleccione una categoría"
+          styleClass="w-full"
+        ></p-dropdown>
+      </div>
+      <!-- Dates -->
+      <div
+        class="flex flex-row gap-4 justify-content-center align-items-center"
+      >
+        <div class="flex flex-column gap-2 w-full">
+          <label for="start_date">Inicia en</label>
+          <p-calendar
+            id="start_date"
+            [(ngModel)]="event.start_date"
+            [showTime]="true"
+            [showIcon]="true"
+            [iconDisplay]="'input'"
+            [hideOnDateTimeSelect]="false"
+            hourFormat="24"
+            dateFormat="yy/mm/dd"
+          >
+          </p-calendar>
+        </div>
+        <div class="flex flex-column gap-2 w-full">
+          <label for="end_date">Termina en</label>
+          <p-calendar
+            id="end_date"
+            [(ngModel)]="event.end_date"
+            [showTime]="true"
+            [showIcon]="true"
+            [iconDisplay]="'input'"
+            [hideOnDateTimeSelect]="false"
+            hourFormat="24"
+            dateFormat="yy/mm/dd"
+            icon="pi pi-calendar"
+          ></p-calendar>
+        </div>
+      </div>
+    </div>
+    <!-- Speakers to the right -->
+    <div class="w-full flex flex-column gap-2">
+      <h3>Ponentes</h3>
+      <!-- Scroll Panel to be able to list multiple speakers -->
+      <p-scrollPanel
+        [style]="{ height: '50vh', width: '100%', padding: '1rem' }"
+      >
+        <div
+          class="flex flex-column gap-2 justify-content-start align-items-start"
+        >
+          <p-button
+            label="Agregar Ponente Nuevo"
+            icon="pi pi-plus"
+            styleClass="p-button-rounded m-1 w-full"
+            (click)="addSpeaker()"
+          ></p-button>
+          <p-dropdown
+            #registeredSpeaker
+            *ngIf="registeredSpeakers.length > 0"
+            [options]="registeredSpeakers"
+            optionLabel="first_name"
+            placeholder="Agregar un Ponente Registrado"
+            (onChange)="
+              addRegisteredSpeaker($event.value); registeredSpeaker.clear()
+            "
+            styleClass="w-full"
+          ></p-dropdown>
+
+          <div
+            class="flex flex-column gap-4 justify-content-start align-items-center mb-3"
+            *ngFor="let speaker of event.speakers; let i = index"
+          >
+            <div class="flex flex-column gap-2">
+              <label for="speaker_last_name">Nombre del Ponente</label>
+              <input
+                id="speaker_last_name"
+                pInputText
+                [(ngModel)]="speaker.speaker.first_name"
+                type="text"
+                class="w-full"
+              />
+              <label for="speaker_first_name">Apellidos del Ponente</label>
+              <input
+                id="speaker_first_name"
+                pInputText
+                [(ngModel)]="speaker.speaker.last_name"
+                [ngModelOptions]="{ standalone: true }"
+                type="text"
+                class="w-full"
+              />
+              <label for="speaker_email">Correo del Ponente</label>
+              <input
+                id="speaker_email"
+                pInputText
+                [(ngModel)]="speaker.speaker.email"
+                [ngModelOptions]="{ standalone: true }"
+                type="email"
+                class="w-48"
+              />
+              <label for="speaker_subject">Tema a Exponer</label>
+              <input
+                id="speaker_subject"
+                pInputText
+                [(ngModel)]="speaker.subject"
+                [ngModelOptions]="{ standalone: true }"
+                type="text"
+                class="w-48"
+              />
+              <p-button
+                label="Eliminar"
+                icon="pi pi-trash"
+                severity="danger"
+                styleClass="p-button-rounded w-full"
+                (click)="removeSpeaker(i)"
+              ></p-button>
+            </div>
+          </div>
+        </div>
+      </p-scrollPanel>
+    </div>
+  </div>
+  <!-- Buttons -->
+  <p-button
+    label="Actualizar Evento"
+    styleClass="mt-3"
+    (click)="updateEvent()"
+    severity="warning"
+  />
+  <p-button
+    label="Eliminar Evento"
+    styleClass="mt-3"
+    (click)="updateEvent()"
+    severity="danger"
+  />
+
+</div>

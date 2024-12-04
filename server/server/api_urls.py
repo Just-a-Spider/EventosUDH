@@ -5,5 +5,5 @@ urlpatterns = [
     path('oauth/', include('social_django.urls', namespace='social')),
     path('chats/', include('chat.api.urls')),
     path('notifications/', include('notifications.api.urls')),
-    path('events/', include('events.api.urls')),
+    path('', include('events.api.urls')),
 ]

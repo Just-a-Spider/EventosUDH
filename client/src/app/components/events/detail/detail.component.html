@@ -1,54 +1,48 @@
-<p-scrollPanel
-  [style]="{
-    width: '90vw',
-    height: '80vh',
-    margin: '1rem',
-    padding: '2rem'
-  }"
+@if(event.id !== undefined){
+<!-- Header -->
+<div
+  class="flex flex-row gap-8 justify-content-center align-items-center w-full"
 >
-  <!-- Header -->
-  <div class="flex flex-row justify-content-between align-items-center w-full">
-    <p-button label="Regresar" icon="pi pi-arrow-left" (click)="goBack()" />
-    <p-button
-      [label]="
-        event.is_participant! === true
-          ? 'Dejar de Participar'
-          : 'Participar'
-      "
-      [icon]="
-        event.is_participant! === true
-          ? 'pi pi-user-minus'
-          : 'pi pi-user-plus'
-      "
-      (click)="joinLeaveEvent()"
-    />
-    <event-clock [targetDate]="eventDate" />
-  </div>
-  <!-- Body -->
-  <h2 class="text-center">{{ event.title }}</h2>
-  <div class="flex flex-row justify-content-between gap-2 w-full">
+  <p-button
+    [label]="
+      event.is_participant! === true ? 'Dejar de Participar' : 'Participar'
+    "
+    [icon]="
+      event.is_participant! === true ? 'pi pi-user-minus' : 'pi pi-user-plus'
+    "
+    (click)="joinLeaveEvent()"
+  />
+  <event-clock [targetDate]="eventDate" />
+</div>
+<!-- Body -->
+<h3 class="text-center">{{ event.title }}</h3>
+<p-divider class="w-full p-0 m-0" />
+<p-scrollPanel [style]="{ height: '50vh', padding: '0.5rem' }">
+  <div class="flex flex-row justify-content-center gap-8">
     <!-- Event Data -->
-    <div class="flex flex-row gap-4">
-      <!-- Event Image -->
-      <p-image
-        [src]="event.promotional_image"
-        alt="{{ event.title }}"
-        width="300rem"
-        height="auto"
-      />
+    <div class="flex flex-column gap-4 main">
       <!-- Event Details -->
       <div>
         <h3>Description del Evento</h3>
         <p>{{ event.description }}</p>
-        <p-divider />
       </div>
+      <!-- Event Image -->
+      <p-image
+        [src]="event.promotional_image"
+        alt="{{ event.title }}"
+        width="100%"
+        height="auto"
+      />
+      <!-- Event Speakers -->
+      <event-speakers
+        *ngIf="event.speakers!.length !== 0"
+        [speakers]="event.speakers!"
+      />
     </div>
-    <!-- Event Speakers -->
-    <event-speakers
-      *ngIf="event.speakers!.length !== 0"
-      [speakers]="event.speakers!"
-    />
     <!-- Event Participants -->
-    <event-participants [participants]="participants" />
+    <div class="side">
+      <event-participants [participants]="participants" />
+    </div>
   </div>
 </p-scrollPanel>
+}

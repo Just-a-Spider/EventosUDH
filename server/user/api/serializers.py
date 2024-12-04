@@ -60,17 +60,39 @@ class BaseUserSerializer(serializers.ModelSerializer):
 class StudentSerializer(BaseUserSerializer):
     class Meta:
         model = Student
-        fields = ['username', 'email', 'first_name', 'last_name', 'code']
+        fields = [
+            'username', 
+            'email', 
+            'first_name', 
+            'last_name', 
+            'code', 
+            'profile_picture'
+        ]
 
 class CoordinatorSerializer(BaseUserSerializer):
     class Meta:
         model = Coordinator
-        fields = ['username', 'email', 'first_name', 'last_name', 'code']
+        fields = [
+            'username', 
+            'email', 
+            'first_name', 
+            'last_name', 
+            'code',
+            'profile_picture'
+        ]
 
 class SpeakerSerializer(BaseUserSerializer):
     class Meta:
         model = Speaker
-        fields = ['username', 'email', 'first_name', 'last_name', 'bio', 'phone']
+        fields = [
+            'username', 
+            'email', 
+            'first_name', 
+            'last_name', 
+            'bio', 
+            'phone',
+            'profile_picture'
+        ]
 
 # ----------------- Password Reset -----------------
 class SendEmailSerializer(serializers.Serializer):

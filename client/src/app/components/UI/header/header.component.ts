@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ButtonInterface } from '../../../interfaces/ui.interface';
 import { AuthService } from '../../../services/auth.service';
 import { ThemeService } from '../../../services/misc/theme.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'ui-header',
@@ -17,6 +18,7 @@ export class HeaderComponent {
   role: string = localStorage.getItem('role') as string;
 
   constructor(
+    private router: Router,
     private authService: AuthService,
     private themeService: ThemeService
   ) {
@@ -47,5 +49,21 @@ export class HeaderComponent {
 
   logout() {
     this.authService.logout();
+  }
+
+  goToSpeakers() {
+    this.router.navigate(['/speakers']);
+  }
+
+  goToEvents() {
+    this.router.navigate(['/events']);
+  }
+
+  goToProfile() {
+    this.router.navigate(['/profile']);
+  }
+
+  goToMyEvents() {
+    this.router.navigate(['/my-events']);
   }
 }

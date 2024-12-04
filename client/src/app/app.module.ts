@@ -23,22 +23,23 @@ import { LiveClockComponent } from './components/events/detail/live-clock/live-c
 import { EventParticipantsComponent } from './components/events/detail/participants/participants.component';
 import { EventSpeakersComponent } from './components/events/detail/speakers/speakers.component';
 import { EventListComponent } from './components/events/list/list.component';
-import { NewEventComponent } from './components/events/new/new.component';
+import { NewEventForm } from './components/events/new/new.component';
 import { HeaderComponent } from './components/UI/header/header.component';
 import { NotificationsComponent } from './components/UI/header/notifications/notifications.component';
 import { SideBarComponent } from './components/UI/side-bar/side-bar.component';
+import { apiKeyInterceptor } from './interceptors/api-key.interceptor';
 import { TranslateRolePipe } from './pipes/translate-role.pipe';
 import { AuthView } from './views/auth/auth.component';
 import { HomeView } from './views/home/home.component';
 import { LandingView } from './views/landing/landing.component';
 import { ProfileView } from './views/profile/profile.component';
 import { ResetPasswordView } from './views/reset-password/reset-password.component';
-import { apiKeyInterceptor } from './interceptors/api-key.interceptor';
+import { EditEventForm } from './components/events/edit/edit.component';
+import { SpeakersListComponent } from './components/speakers/list/list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-
     // Pipes
     CapitalizePipe,
     TranslateRolePipe,
@@ -55,11 +56,13 @@ import { apiKeyInterceptor } from './interceptors/api-key.interceptor';
     NotificationsComponent,
     EventListComponent,
     EventDetailComponent,
-    NewEventComponent,
+    NewEventForm,
     LiveClockComponent,
     EventParticipantsComponent,
     EventSpeakersComponent,
     ResetPasswordView,
+    EditEventForm,
+    SpeakersListComponent,
   ],
   imports: [
     BrowserModule,
