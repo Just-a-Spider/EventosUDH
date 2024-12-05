@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { EventsService } from '../../../services/events.service';
 import { FullEvent } from '../../../classes/event.class';
 import { User } from '../../../classes/user.class';
@@ -10,20 +10,14 @@ import { Router } from '@angular/router';
   styleUrl: './detail.component.scss',
 })
 export class EventDetailComponent {
-  currentEvent: FullEvent = new FullEvent();
+  @Input() event: FullEvent = new FullEvent();
+  @Input() participants: User[] = [];
   eventDate = new Date();
-  participants: User[] = [];
 
-  constructor(private router: Router, private eventsService: EventsService) {
-    this.eventsService.currentEvent$.subscribe((event) => {
-      this.currentEvent = event;
-      this.eventDate = new Date(this.currentEvent.start_date!);
-    });
-    this.getParticipants();
-  }
+  constructor(private router: Router, private eventsService: EventsService) {}
 
   getParticipants() {
-    this.eventsService.getParticipants(this.currentEvent.id!).subscribe({
+    this.eventsService.getParticipants(this.event.id!).subscribe({
       next: (participants) => {
         this.participants = participants;
       },
@@ -32,19 +26,18 @@ export class EventDetailComponent {
       },
     });
   }
-
+  
   joinLeaveEvent() {
-    if (this.currentEvent.is_participant!) {
-      this.eventsService.leaveEvent(this.currentEvent.id!);
-      this.currentEvent.is_participant = false;
-    } else {
-      this.eventsService.joinEvent(this.currentEvent.id!);
-      this.currentEvent.is_participant = true;
-    }
-    this.getParticipants();
-  }
-
-  goBack() {
-    this.router.navigate(['']);
+    this.eventsService
+      .toggleEventParticipation(this.event.id!, !this.event.is_participant!)
+      .subscribe({
+        next: () => {
+          this.getParticipants();
+          this.event.is_participant = !this.event.is_participant;
+        },
+        error: (error) => {
+          console.error(error);
+        },
+      });
   }
 }

@@ -55,11 +55,11 @@ class LoginView(APIView):
         return authenticate_user(user, password)
 
 class LogoutView(APIView):
-
     def get(self, request):
-        response = Response({'detail': 'Logout successful'})
-        response.delete_cookie('access_token')
-        response.delete_cookie('refresh_token')
+        response = Response({'detail': 'Logout successful'}, status=status.HTTP_200_OK)
+        response.delete_cookie('access_token', path='/', domain=None, samesite='None')
+        response.delete_cookie('refresh_token', path='/', domain=None, samesite='None')
+        response.delete_cookie('sessionid', path='/', domain=None, samesite='None')
         return response
 
 class MeView(RetrieveAPIView):

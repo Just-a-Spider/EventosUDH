@@ -33,6 +33,23 @@ else:
     CORS_ALLOW_ALL_ORIGINS = True
     CORS_ALLOW_CREDENTIALS = True
 
+CORS_ALLOW_HEADERS = [
+    'content-type',
+    'authorization',
+    'x-api-key',  # Add the X-API-KEY header here
+    'x-requested-with',
+    'accept',
+    'origin',
+    'user-agent',
+    'dnt',
+    'cache-control',
+    'x-csrftoken',
+    'x-frame-options',
+]
+
+# API Key
+API_KEY = os.getenv('API_KEY')
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -78,6 +95,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',  # Google Auth
 ]
+
+if os.getenv('EAK', 'False') == 'True':
+    MIDDLEWARE.append(
+        'server.middleware.api_key.APIKeyMiddleware',  # API Key
+    )
 
 # Test config
 # TEST_RUNNER = 'server.utils.test_runner.CustomTestRunner'
@@ -277,9 +299,9 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.auth_allowed',
     'social_core.pipeline.social_auth.social_user',
     'social_core.pipeline.user.get_username',
-    'social_core.pipeline.user.create_user',
-    'social_core.pipeline.social_auth.associate_user',
+    'user.pipes.social_auth.create_student',  # Replace create_user with create_student
+    'user.pipes.social_auth.associate_student',  # Use custom associate_student function
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
-    'user.social.social_auth_pipeline.fetch_google_classroom_courses',  # Add this line
+    'user.pipes.social_auth.fetch_google_classroom_courses',  # Add this line
 )

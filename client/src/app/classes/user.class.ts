@@ -8,4 +8,18 @@ export class User {
   code?: string;
   bio?: string;
   phone?: string;
+  profile_picture?: string;
+
+  constructor() {
+    this.id = 0;
+    this.first_name = '';
+    this.last_name = '';
+    this.username = '';
+    this.email = '';
+    this.role = '';
+    this.code = '';
+    this.bio = '';
+    this.phone = '';
+    this.profile_picture = 'https://via.placeholder.com/150';
+  }
 }

@@ -15,19 +15,47 @@
       />
     </div>
     @if (!isOnAuth) {
+    <!-- Coordinator Buttons -->
+    <p-button
+      *ngIf="role === 'coordinator'"
+      label="Gestionar Ponentes"
+      icon="pi pi-users"
+      [severity]="selButtonStyle.severity"
+      styleClass="p-button-rounded"
+      (click)="goToSpeakers()"
+    />
     <p-button
       *ngIf="role === 'coordinator'"
       icon="pi pi-plus"
       label="Nuevo Evento"
       [severity]="selButtonStyle.severity"
       styleClass="p-button-rounded"
+      (click)="displayCreateEvent = true"
+    />
+    <!-- Student Buttons -->
+    <p-button
+      *ngIf="role === 'student'"
+      label="Mis Eventos"
+      icon="pi pi-calendar"
+      [severity]="selButtonStyle.severity"
+      styleClass="p-button-rounded"
+      (click)="goToMyEvents()"
     />
     <header-notis />
+    <!-- Common Buttons -->
+    <p-button
+      label="Eventos"
+      icon="pi pi-calendar"
+      [severity]="selButtonStyle.severity"
+      styleClass="p-button-rounded"
+      (click)="goToEvents()"
+    />
     <p-button
       [icon]="selButtonStyle.icon"
       [label]="selButtonStyle.label"
       styleClass="p-button-rounded w-8rem"
       [severity]="selButtonStyle.severity"
+      (click)="goToProfile()"
     />
     <p-button
       icon="pi pi-sign-out"
@@ -38,3 +66,11 @@
     />}
   </div>
 </div>
+<p-dialog
+  header="Crear Evento"
+  [(visible)]="displayCreateEvent"
+  [style]="{ width: '70vw' }"
+  [modal]="true"
+>
+  <event-create-form />
+</p-dialog>

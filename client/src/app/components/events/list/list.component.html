@@ -1,37 +1,87 @@
-<h3 class="text-center">Próximos Eventos</h3>
-<div
-  class="flex align-items-center justify-content-center flex-wrap"
-  style="max-width: full; padding: 2rem"
->
-  @for (event of events; track event.id) {
-  <div
-    class="flex align-items-center justify-content-center m-4"
-    style="width: 15rem"
-  >
-    <p-card [header]="event.title" class="min-w-full min-h-full">
-      <img
-        src="{{ event.promotional_image }}"
-        alt="{{ event.title }}"
-        height="140rem"
-      />
-      <p>{{ event.event_type }}</p>
-      <div class="flex flex-column gap-2">
-        <p-button
-          label="Ir"
-          icon="pi pi-arrow-right"
-          severity="primary"
-          (click)="seeEvent(event.id!)"
-          styleClass="w-full"
-        ></p-button>
-        <p-button
-          *ngIf="role === 'coordinator'"
-          label="Eliminar"
-          icon="pi pi-trash"
-          severity="danger"
-          styleClass="w-full"
-        ></p-button>
-      </div>
-    </p-card>
-  </div>
-  }
+<h3 class="text-center">{{ title }}</h3>
+<!-- Next-Prev Buttons -->
+<div class="flex flex-row justify-content-between align-items-center">
+  <p-button
+    label="Anterior"
+    icon="pi pi-angle-left"
+    (click)="prevPage()"
+    [disabled]="currentPage === 1"
+  ></p-button>
+  <p-dropdown
+    [options]="pageDropdownOptions"
+    [(ngModel)]="currentPage"
+    (onChange)="onPageChange($event)"
+    [style]="{ width: '5rem' }"
+  ></p-dropdown>
+  <p-button
+    label="Siguiente"
+    icon="pi pi-angle-right"
+    (click)="nextPage()"
+    [disabled]="currentPage === pageOptions.length"
+  ></p-button>
 </div>
+<p-scrollPanel
+  [style]="{
+    height: '80vh',
+    margin: '0.5rem',
+    padding: '0.5rem',
+    width: '90vw',
+    'overflow-x': 'hidden',
+  }"
+>
+  <div
+    class="flex align-items-center justify-content-center flex-wrap"
+    style="max-width: full; padding: 2rem"
+  >
+    @for (event of events; track event.id) {
+    <div
+      class="flex align-items-center justify-content-center m-4"
+      style="width: 15rem"
+    >
+      <p-card [header]="event.title" class="min-w-full min-h-full">
+        <img
+          src="{{ event.promotional_image }}"
+          alt="{{ event.title }}"
+          height="140rem"
+        />
+        <p>{{ event.event_type }}</p>
+        <div class="flex flex-column gap-2">
+          <p-button
+            label="Ver"
+            icon="pi pi-eye"
+            severity="primary"
+            (click)="seeEditEvent(event.id!)"
+            styleClass="w-full"
+          ></p-button>
+          <p-button
+            *ngIf="role === 'coordinator'"
+            label="Editar"
+            icon="pi pi-pencil"
+            severity="warning"
+            (click)="seeEditEvent(event.id!, true)"
+            styleClass="w-full"
+          ></p-button>
+        </div>
+      </p-card>
+    </div>
+    }
+  </div>
+</p-scrollPanel>
+<!-- Detail Dialog -->
+<p-dialog
+  header="Detalles del Evento"
+  [(visible)]="displayEvent"
+  [style]="{ width: '55vw', 'overflow-x': 'hidden' }"
+  [modal]="true"
+>
+  <event-detail [event]="currentEvent" [participants]="participants" />
+</p-dialog>
+<p-dialog
+  *ngIf="role === 'coordinator'"
+  header="Editar Evento"
+  [(visible)]="displayEdit"
+  [style]="{ width: '70vw' }"
+  [modal]="true"
+>
+  <event-edit-form [event]="currentEvent" />
+</p-dialog>

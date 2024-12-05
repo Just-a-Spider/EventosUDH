@@ -4,7 +4,8 @@ from . import views
 
 router = DefaultRouter()
 
-router.register('', views.EventViewSet, basename='events')
-router.register('types', views.EventTypeViewSet, basename='event_types')
+router.register('events', views.EventViewSet, basename='events')
+router.register('event-types', views.EventTypeViewSet, basename='event_types')
+router.register('speakers', views.SpeakerViewSet, basename='speakers')
 
 urlpatterns = router.urls

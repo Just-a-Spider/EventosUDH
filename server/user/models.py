@@ -5,6 +5,9 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.utils.translation import gettext_lazy as _
 
+def upload_profile_picture(instance, filename):
+    return f'{instance.__class__.__name__.lower()}/{instance.username}/profile_picture/{filename}'
+
 class CustomBaseUserManager(BaseUserManager):
     def create_user(self, username, email, password, first_name, last_name):
         user = self.model(
@@ -32,6 +35,13 @@ class CustomBaseUserManager(BaseUserManager):
 class CustomBaseUser(AbstractBaseUser, PermissionsMixin):
     id = models.AutoField(primary_key=True)
     username = models.CharField(_('username'), max_length=150, unique=True)
+    profile_picture = models.ImageField(
+        upload_to=upload_profile_picture, 
+        null=True, 
+        blank=True,
+        default=None,
+        max_length=255
+    )
     password = models.CharField(_('password'), max_length=128)
     email = models.EmailField(unique=True)
     first_name = models.CharField(_("first name"), max_length=30)

@@ -1,14 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { EventDetailComponent } from './components/events/detail/detail.component';
 import { EventListComponent } from './components/events/list/list.component';
-import { NewEventComponent } from './components/events/new/new.component';
 import { authGuard } from './guards/auth.guard';
 import { AuthView } from './views/auth/auth.component';
 import { HomeView } from './views/home/home.component';
 import { LandingView } from './views/landing/landing.component';
 import { ProfileView } from './views/profile/profile.component';
 import { ResetPasswordView } from './views/reset-password/reset-password.component';
+import { SpeakersListComponent } from './components/speakers/list/list.component';
 
 const routes: Routes = [
   { path: 'landing', component: LandingView },
@@ -19,13 +18,13 @@ const routes: Routes = [
     component: HomeView,
     canActivate: [authGuard],
     children: [
-      { path: '', component: EventListComponent },
-      { path: 'detail', component: EventDetailComponent },
-      { path: 'new', component: NewEventComponent },
+      { path: 'events', component: EventListComponent },
+      { path: 'my-events', component: EventListComponent },
+      { path: 'speakers', component: SpeakersListComponent },
     ],
   },
-  { path: 'me', component: ProfileView, canActivate: [authGuard] },
-  { path: '**', redirectTo: 'landing' },
+  { path: 'profile', component: ProfileView, canActivate: [authGuard] },
+  { path: '**', redirectTo: 'events' },
 ];
 
 @NgModule({

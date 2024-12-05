@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NewEventForm } from './new-event.component';
+import { SpeakersListComponent } from './list.component';
 
-describe('NewEventComponent', () => {
-  let component: NewEventForm;
-  let fixture: ComponentFixture<NewEventForm>;
+describe('ListComponent', () => {
+  let component: SpeakersListComponent;
+  let fixture: ComponentFixture<SpeakersListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [NewEventForm],
+      declarations: [SpeakersListComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(NewEventForm);
+    fixture = TestBed.createComponent(SpeakersListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

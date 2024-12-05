@@ -21,12 +21,13 @@ class Event(models.Model):
     description = models.TextField()
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
-    location = models.CharField(max_length=255)
+    location = models.CharField(max_length=255, null=True, blank=True, default=None)
     promotional_image = models.ImageField(
         upload_to=upload_promotional_image, 
         null=True, 
         blank=True,
-        default=None
+        default=None,
+        max_length=255
     )
 
     # Foreigns
@@ -40,6 +41,8 @@ class Event(models.Model):
         default=None
     )
     event_type = models.ForeignKey(EventType, on_delete=models.CASCADE, related_name='event_type')
+
+    # Many to many
     participants = models.ManyToManyField('user.Student', through='EventParticipant', related_name='participated_events')
     speakers = models.ManyToManyField(
         'user.Speaker', 

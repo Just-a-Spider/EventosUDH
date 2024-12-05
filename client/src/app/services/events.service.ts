@@ -1,8 +1,8 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
-import { FullEvent, SimpleEvent } from '../classes/event.class';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { FullEvent } from '../classes/event.class';
 import { User } from '../classes/user.class';
 
 @Injectable({
@@ -10,28 +10,35 @@ import { User } from '../classes/user.class';
 })
 export class EventsService {
   private apiUrl = environment.apiUrl + 'events/';
-  private currentEventSubject: BehaviorSubject<FullEvent>;
-  currentEvent$: Observable<FullEvent>;
 
-  setCurrentEvent(event: FullEvent) {
-    this.currentEventSubject.next(event);
-    localStorage.setItem('currentEvent', JSON.stringify(event));
-  }
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) {
-    const savedEvent = localStorage.getItem('currentEvent');
-    this.currentEventSubject = new BehaviorSubject<FullEvent>(
-      savedEvent ? JSON.parse(savedEvent) : new FullEvent()
-    );
-    this.currentEvent$ = this.currentEventSubject.asObservable();
-  }
-
-  getEvents(): Observable<any> {
-    return this.http.get<any>(this.apiUrl, { withCredentials: true });
+  // General Actions
+  getEvents(limit: number, offset: number, myEvents: boolean): Observable<any> {
+    let endpoint = myEvents ? 'my-events/' : '';
+    let params = new HttpParams()
+      .set('limit', limit.toString())
+      .set('offset', offset.toString());
+    return this.http.get<any>(`${this.apiUrl}${endpoint}`, {
+      params,
+      withCredentials: true,
+    });
   }
 
   getEvent(id: string): Observable<FullEvent> {
     return this.http.get<FullEvent>(`${this.apiUrl}${id}/`, {
+      withCredentials: true,
+    });
+  }
+
+  createEvent(event: any): Observable<FullEvent> {
+    return this.http.post<FullEvent>(this.apiUrl, event, {
+      withCredentials: true,
+    });
+  }
+
+  editEvent(eventId: string, event: any): Observable<FullEvent> {
+    return this.http.put<FullEvent>(`${this.apiUrl}${eventId}/`, event, {
       withCredentials: true,
     });
   }
@@ -43,33 +50,26 @@ export class EventsService {
     });
   }
 
-  joinEvent(eventId: string) {
-    this.http
-      .get(`${this.apiUrl}${eventId}/join-event/`, {
-        withCredentials: true,
-      })
-      .subscribe({
-        next: (response) => {
-          console.log(response);
-        },
-        error: (error) => {
-          console.error(error);
-        },
-      });
+  toggleEventParticipation(eventId: string, join: boolean) {
+    const action = join ? 'join-event' : 'leave-event';
+    return this.http.get(`${this.apiUrl}${eventId}/${action}/`, {
+      withCredentials: true,
+    });
   }
 
-  leaveEvent(eventId: string) {
-    this.http
-      .get(`${this.apiUrl}${eventId}/leave-event/`, {
-        withCredentials: true,
-      })
-      .subscribe({
-        next: (response) => {
-          console.log(response);
-        },
-        error: (error) => {
-          console.error(error);
-        },
-      });
+  // Special Actions
+  getSpeakers(): Observable<User[]> {
+    return this.http.get<User[]>(`${environment.apiUrl}speakers/`, {
+      withCredentials: true,
+    });
+  }
+
+  getEventTypes(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}event-types/`, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
   }
 }

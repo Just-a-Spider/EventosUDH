@@ -1,4 +1,5 @@
 from rest_framework import status, viewsets
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.decorators import action
@@ -7,7 +8,8 @@ from server.middleware.auth_classes import role_to_model
 from faculties.models import Faculty
 from events import models
 from events.api import serializers
-from user.api.serializers import StudentSerializer
+from user.api.serializers import StudentSerializer, SpeakerSerializer
+from user.models import Speaker
     
 from server.permissions import IsCoordinator
 from rest_framework.permissions import IsAuthenticated
@@ -16,14 +18,42 @@ class EventTypeViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.EventTypeModelSerializer
     permission_classes = [IsAuthenticated, IsCoordinator]
 
+    def get_queryset(self):
+        return models.EventType.objects.filter(faculty=self.request.user.faculty)
+    
+    def perform_create(self, serializer):
+        serializer.save(faculty=self.request.user.faculty)
+    
+class SpeakerViewSet(viewsets.ModelViewSet):
+    queryset = Speaker.objects.all()
+    serializer_class = SpeakerSerializer
+    permission_classes = [IsAuthenticated, IsCoordinator]
+
+    def perform_create(self, serializer):
+        serializer.save(password='1234')
+    
+    def perform_update(self, serializer):
+        instance = self.get_object()
+        validated_data = serializer.validated_data
+        instance.username = validated_data.get('username', instance.username)
+        instance.email = validated_data.get('email', instance.email)
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.bio = validated_data.get('bio', instance.bio)
+        instance.phone = validated_data.get('phone', instance.phone)
+        instance.save()
+    
+    def perform_destroy(self, instance):
+        instance.delete()
+
 class EventViewSet(viewsets.ModelViewSet):
     queryset = models.Event.objects.all()
     lookup_field = 'id'
     pagination_class = LimitOffsetPagination
-    
+
     # Methods
     def get_serializer_class(self):
-        if self.action == 'list':
+        if self.action == 'list' or self.action == 'my_events':
             return serializers.ListSerializer
         elif self.action == 'create' or self.action == 'update' :
             return serializers.CreateSerializer
@@ -38,6 +68,10 @@ class EventViewSet(viewsets.ModelViewSet):
             organizer=self.request.user,
             faculty = self.request.user.faculty,
         )
+        return Response(
+            {'message': 'Event created successfully'},
+            status=status.HTTP_201_CREATED
+        )
 
     def perform_update(self, serializer):
         event = self.get_object()
@@ -46,26 +80,12 @@ class EventViewSet(viewsets.ModelViewSet):
             self.request.user.__class__ != role_to_model.get('coordinator')
             or not
             self.request.user == event.organizer
-            or not
-            self.request.user == event.student_organizer
         ):
             raise PermissionDenied('You are not allowed to update events')
 
         instance = self.get_object()
         validated_data = serializer.validated_data
-
-        # Fields to update
-        fields_to_update = {
-            'organizer': self.request.user,
-            'faculty': Faculty.objects.get(coordinator=self.request.user),
-            'student_organizer': None,
-        }
-
-        for field, default_value in fields_to_update.items():
-            if field in validated_data:
-                validated_data[field] = validated_data[field]
-            elif default_value is not None:
-                validated_data[field] = default_value
+        print(validated_data)
 
         serializer.update(instance, validated_data)
 
@@ -112,6 +132,20 @@ class EventViewSet(viewsets.ModelViewSet):
         event = self.get_object()
         participants = event.participants.all()
         serializer = StudentSerializer(participants, many=True)
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )
+    
+    @action(detail=False, methods=['get'], url_path='my-events')
+    def my_events(self, request):
+        events = models.Event.objects.filter(participants=request.user)
+        page = self.paginate_queryset(events)
+        if page is not None:
+            serializer = serializers.ListSerializer(page, many=True, context={'request': request})
+            return self.get_paginated_response(serializer.data)
+        
+        serializer = serializers.ListSerializer(events, many=True, context={'request': request})
         return Response(
             serializer.data,
             status=status.HTTP_200_OK

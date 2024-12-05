@@ -27,7 +27,7 @@ export class NotificationsService {
 
   private async connect() {
     this.authService.user$
-      .pipe(filter((user) => user.username !== undefined))
+      .pipe(filter((user) => user.username !== ''))
       .subscribe({
         next: (user: User) => {
           const username = user.username;
