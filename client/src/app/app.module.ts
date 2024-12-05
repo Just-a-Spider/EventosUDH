@@ -36,6 +36,7 @@ import { ProfileView } from './views/profile/profile.component';
 import { ResetPasswordView } from './views/reset-password/reset-password.component';
 import { EditEventForm } from './components/events/edit/edit.component';
 import { SpeakersListComponent } from './components/speakers/list/list.component';
+import { RestorePassView } from './views/restore-pass/restore-pass.component';
 
 @NgModule({
   declarations: [

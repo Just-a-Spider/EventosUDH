@@ -1,92 +1,68 @@
-/* Estilos para el header */
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background-color: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.logo {
-    height: 50px;
-}
-
-.start-button {
-    color: white;
-    border: none;
-    cursor: pointer;
-    padding: 10px 20px;
-    transition: background-color 0.3s;
-    border-radius: 5px;
-}
-
-/* Estilos para la sección principal */
 .hero-section {
-    text-align: center;
-    padding: 100px 20px;
-    background: url('https://source.unsplash.com/featured/?education,learning') no-repeat center center/cover;
-    color: #333;
-    flex: 1;
+  background-image: url('assets/hero-background.jpg');
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  padding: 4rem;
+  text-align: center;
 }
 
 .hero-section h1 {
-    font-size: 3.5em;
-    margin-bottom: 20px;
+  font-size: 3rem;
+  margin-bottom: 1rem;
 }
 
 .rotating-text {
-    font-size: 1.5em;
-    animation: rotateText 12s infinite linear;
-    margin-bottom: 20px;
+  font-size: 2rem;
+  margin-bottom: 1rem;
 }
 
 .description {
-    font-size: 1.2em;
-    max-width: 800px;
-    margin: 0 auto;
-    margin-bottom: 20px;
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
 }
 
-@keyframes rotateText {
-    0% { content: "¿Quiénes somos?"; }
-    33% { content: "Propósito"; }
-    66% { content: "Integrantes"; }
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  padding: 3rem;
 }
 
-.info-section button {
-    margin: 10px;
-    padding: 10px 20px;
-    background-color: #FF6F00;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+.category-item {
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  text-align: center;
 }
 
-.info-section button:hover {
-    background-color: #FF8F00;
+.category-item img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
 }
 
-/* Estilos para el footer */
+.category-item h3 {
+  font-size: 1.2rem;
+  margin: 1rem 0 0.5rem;
+}
+
+.category-item p {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
 .footer {
-    display: flex;
-    justify-content: center;
-    padding: 20px;
-    background-color: #F0F4F8;
-    margin-top: 50px;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+  background-color: #333;
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
 }
 
 .social-icon {
-    font-size: 1.8em;
-    color: #4A90E2;
-    margin: 0 15px;
-    transition: color 0.3s;
-}
-
-.social-icon:hover {
-    color: #FF6F00;
+  color: #fff;
+  font-size: 1.5rem;
+  margin: 0 0.5rem;
 }

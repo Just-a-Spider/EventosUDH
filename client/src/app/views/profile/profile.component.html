@@ -1,5 +1,32 @@
-<div
-  class="flex flex-column justify-content-start align-items-center h-screen w-screen overflow-y-hidden"
->
-  <p>profile works!</p>
+<div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+  <div class="profile-container">
+    <div class="profile-header d-flex align-items-center justify-content-center">
+      <img src="assets/profile-picture.jpg" alt="Profile Picture" class="profile-picture">
+      <div class="profile-info text-center">
+        <h2>John Doe</h2>
+        <p>john.doe.com</p>
+        <p></p>
+      </div>
+    </div>
+    <div class="profile-details">
+      <div class="row">
+        <div class="col-4">
+          <h3>Personal Information</h3>
+          <p><i class="pi pi-user"></i> John Doe</p>
+          <p><i class="pi pi-envelope"></i> john.doe.com</p>
+          <p><i class="pi pi-briefcase"></i></p>
+        </div>
+        <div class="col-4">
+          <h3>Contact</h3>
+          <p><i class="pi pi-phone"></i> +1 (123) 456-7890</p>
+          <p><i class="pi pi-map-marker"></i> 123 Main Street, Anytown USA</p>
+        </div>
+        <div class="col-4">
+          <h3>Settings</h3>
+          <button pButton label="Edit Profile" icon="pi pi-pencil" class="p-button-rounded p-button-text"></button>
+          <button pButton label="Change Password" icon="pi pi-lock" class="p-button-rounded p-button-text"></button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
