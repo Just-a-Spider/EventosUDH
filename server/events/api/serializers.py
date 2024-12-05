@@ -3,7 +3,6 @@ from user.api.serializers import StudentSerializer, CoordinatorSerializer, Speak
 from user.models import Speaker
 from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
-import json
 
 def add_speaker_to_event(event, speaker_data):
     email = speaker_data['email']
