@@ -1,16 +1,33 @@
-$primaryColor: rgba(#2fbba0, 0.8);
+$primaryColor: #5499c7;
 // Darken the primary color for the dark theme
+$primaryDarkerColor: #5499c7;
 $primaryDarkColor: #5499c7;
+$primaryColorStart: rgba(#259c9a, 0.8);
+$primaryColorEnd: #0a2449;
+$buttonGradient: linear-gradient(
+  to right,
+  $primaryColorStart,
+  $primaryColorEnd
+);
+$buttonHoverGradient: linear-gradient(
+  to right,
+  $primaryColorEnd,
+  $primaryColorStart
+);
+$checkboxActiveHoverBg: $primaryDarkColor;
+$dialogHeaderBg: $primaryDarkColor;
+$dialogHeaderTextColor: white;
 $fontSize: 0.8rem;
 $inputSwitchSliderOnBg: #6f7070;
 $inputSwitchSliderOnHoverBg: #6f7070;
 $inputSwitchSliderOffBg: #edd17e;
 $inputSwitchSliderOffHoverBg: #edd17e;
 $buttonPadding: 0.4rem $fontSize;
+$buttonBg: $primaryColor;
 $buttonHoverBg: $primaryDarkColor;
 $buttonHoverBorderColor: $primaryDarkColor;
 $inputTextFontSize: $fontSize;
-$dividerSize: 2px;
+$dividerSize: 0.5rem;
 $dividerColor: $primaryDarkColor;
 $dividerHorizontalMargin: 0;
 $dividerHorizontalPadding: 0;
@@ -18,17 +35,8 @@ $dividerVerticalMargin: 0;
 $dividerVerticalPadding: 0;
 $cardTitleFontSize: 0.8rem;
 $cardContentPadding: 0;
-$accordionHeaderBg: none;
-$accordionHeaderBorder: none;
-$accordionHeaderHoverBg: none;
-$accordionHeaderHoverBorderColor: $primaryDarkColor;
-$accordionHeaderActiveBg: none;
-$accordionHeaderActiveBorderColor: $primaryColor;
-$accordionHeaderActiveHoverBg: none;
-$accordionHeaderActiveHoverBorderColor: $primaryColor;
-$accordionContentBorder: none;
 $calendarTimePickerTimeFontSize: 0.8rem;
-$calendarCellDatePadding: .2rem;
+$calendarCellDatePadding: 0.2rem;
 // $inputListBg: #1b1f92;
 // $inputListItemBorderRadius: 10px;
 // $inputListItemHoverBg: #015aa6;
@@ -51,7 +59,53 @@ $calendarCellDatePadding: .2rem;
 $tabviewHeaderTextHoverColor: #19d6c2;
 $tabviewHeaderTextActiveColor: #19d6c2;
 $tabviewHeaderSpacing: 0.2rem;
+$tableHeaderBg: $primaryDarkColor;
 $fileUploadContentPadding: 0;
 $fileUploadProgressBarHeight: 0;
 
-@import "../node_modules/primeng-sass-theme/themes/lara/lara-light/indigo/theme.scss";
+@import "../node_modules/primeng-sass-theme/themes/lara/lara-light/purple/theme.scss";
+
+// Button
+.p-button {
+  color: white !important; /* Adjust text color as needed */
+  border: none !important; /* Remove border if needed */
+  border-radius: 5px !important; /* Adjust border radius as needed */
+  cursor: pointer !important; /* Change cursor to pointer on hover */
+  background: $primaryDarkColor !important; /* Add gradient background */
+
+  &:hover {
+    background: $primaryDarkColor !important; /* Reverse gradient on hover */
+  }
+}
+
+.p-button-danger {
+  background: #FF5C3E !important;
+
+  &:hover {
+    background: #FF5C3E !important;
+  }
+}
+
+.p-button-warning {
+  background: #76d7c4 !important;
+
+  &:hover {
+    background: #76d7c4 !important;
+  }
+}
+
+.p-button-info {
+  // No Background
+  background: none !important;
+
+  &:hover {
+    background: none !important;
+  }
+}
+
+// Divider
+.p-divider {
+  box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1) !important; /* Add smooth shadow to divider */
+}
+
+// Card

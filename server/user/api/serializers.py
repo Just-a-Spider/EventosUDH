@@ -85,6 +85,7 @@ class SpeakerSerializer(BaseUserSerializer):
     class Meta:
         model = Speaker
         fields = [
+            'id',
             'username', 
             'email', 
             'first_name', 

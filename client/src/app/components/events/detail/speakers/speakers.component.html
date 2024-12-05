@@ -1,1 +1,27 @@
-<p>speakers works!</p>
+<div
+  class="flex flex-column w-full p-4 justify-content-center align-items-center"
+>
+  <p-table [value]="speakers" class="w-full">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Correo</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Teléfono</th>
+        <th>Bio</th>
+        <th>Tema</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-speaker>
+      <tr>
+        <td>{{ speaker.speaker.email }}</td>
+        <td>{{ speaker.speaker.first_name }}</td>
+        <td>{{ speaker.speaker.last_name }}</td>
+        <td>{{ speaker.speaker.phone }}</td>
+        <td class="w-full">{{ speaker.speaker.bio }}</td>
+        <td>{{ speaker.subject }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <div></div>
+</div>

@@ -10,6 +10,7 @@ from events import models
 from events.api import serializers
 from user.api.serializers import StudentSerializer, SpeakerSerializer
 from user.models import Speaker
+from django.contrib.auth.hashers import make_password
     
 from server.permissions import IsCoordinator
 from rest_framework.permissions import IsAuthenticated
@@ -30,7 +31,8 @@ class SpeakerViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsCoordinator]
 
     def perform_create(self, serializer):
-        serializer.save(password='1234')
+        validated_data = serializer.validated_data
+        serializer.save(password=make_password(validated_data.get('first_name')))
     
     def perform_update(self, serializer):
         instance = self.get_object()

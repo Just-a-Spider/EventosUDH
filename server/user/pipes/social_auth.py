@@ -105,7 +105,11 @@ def fetch_google_classroom_courses(backend, user, response, *args, **kwargs):
                 continue
 
             # course_name = course_data.get('name')
-            course_faculty = course_data.get('descriptionHeading').split(': ')[1]
+            description_heading = course_data.get('descriptionHeading', '')
+            if ': ' in description_heading:
+                course_faculty = description_heading.split(': ')[1]
+            else:
+                linked_faulties = True
 
             if not linked_faulties:
                 faculty, _ = Faculty.objects.get_or_create(name=course_faculty)

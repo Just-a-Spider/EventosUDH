@@ -1,34 +1,47 @@
-<h3 class="text-center">{{ title }}</h3>
-<!-- Next-Prev Buttons -->
-<div class="flex flex-row justify-content-between align-items-center">
-  <p-button
-    label="Anterior"
-    icon="pi pi-angle-left"
-    (click)="prevPage()"
-    [disabled]="currentPage === 1"
-  ></p-button>
-  <p-dropdown
-    [options]="pageDropdownOptions"
-    [(ngModel)]="currentPage"
-    (onChange)="onPageChange($event)"
-    [style]="{ width: '5rem' }"
-  ></p-dropdown>
-  <p-button
-    label="Siguiente"
-    icon="pi pi-angle-right"
-    (click)="nextPage()"
-    [disabled]="currentPage === pageOptions.length"
-  ></p-button>
-</div>
 <p-scrollPanel
   [style]="{
-    height: '80vh',
-    margin: '0.5rem',
-    padding: '0.5rem',
-    width: '90vw',
+    height: '90vh',
+    width: 'full',
     'overflow-x': 'hidden',
   }"
 >
+  <div
+    class="flex w-screen flex-row gap-8 justify-content-center align-items-center main overflow-x-hidden"
+  >
+    <h1 class="nexify">Nexify</h1>
+    <div class="w-30rem">
+      <p class="next">
+        Nuestro sistema está pensado para facilitarte el acceso a eventos que no
+        solo informan, sino que también inspiran y fomentan el crecimiento
+        personal y profesional. Cada evento es una oportunidad para conectar con
+        expertos en diversas áreas, explorar nuevas ideas y compartir
+        experiencias con una comunidad apasionada por el aprendizaje continuo.
+      </p>
+    </div>
+  </div>
+
+  <!-- Next-Prev Buttons -->
+  <div class="flex flex-row gap-8 justify-content-center align-items-center mt-3">
+    <p-button
+      label="Anterior"
+      icon="pi pi-angle-left"
+      (click)="prevPage()"
+      [disabled]="currentPage === 1"
+    ></p-button>
+    <p-dropdown
+      [options]="pageDropdownOptions"
+      [(ngModel)]="currentPage"
+      (onChange)="onPageChange($event)"
+      [style]="{ width: '5rem' }"
+    ></p-dropdown>
+    <p-button
+      label="Siguiente"
+      icon="pi pi-angle-right"
+      (click)="nextPage()"
+      [disabled]="currentPage === pageOptions.length"
+    ></p-button>
+  </div>
+
   <div
     class="flex align-items-center justify-content-center flex-wrap"
     style="max-width: full; padding: 2rem"

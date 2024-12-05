@@ -9,6 +9,7 @@ export class User {
   bio?: string;
   phone?: string;
   profile_picture?: string;
+  linkedin?: string;
 
   constructor() {
     this.id = 0;
@@ -20,6 +21,7 @@ export class User {
     this.code = '';
     this.bio = '';
     this.phone = '';
-    this.profile_picture = 'https://via.placeholder.com/150';
+    this.profile_picture = 'https://via.placeholder.com/400';
+    this.linkedin = '';
   }
 }

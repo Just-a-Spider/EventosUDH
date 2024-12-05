@@ -1,32 +1,81 @@
-<div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
-  <div class="profile-container">
-    <div class="profile-header d-flex align-items-center justify-content-center">
-      <img src="assets/profile-picture.jpg" alt="Profile Picture" class="profile-picture">
-      <div class="profile-info text-center">
-        <h2>John Doe</h2>
-        <p>john.doe.com</p>
-        <p></p>
+<p-toast position="bottom-left" />
+<!-- General User Setting -->
+<div class="flex flex-row gap-8 justify-content-center align-items-center main">
+  <div class="flex flex-column gap-4 w-20rem">
+    <p-card class="w-full">
+      <div class="flex flex-column w-full gap-2">
+        <p-button
+          label="Guardar Cambios"
+          icon="pi pi-save"
+          (click)="saveProfile()"
+          styleClass="w-full"
+        ></p-button>
       </div>
-    </div>
-    <div class="profile-details">
-      <div class="row">
-        <div class="col-4">
-          <h3>Personal Information</h3>
-          <p><i class="pi pi-user"></i> John Doe</p>
-          <p><i class="pi pi-envelope"></i> john.doe.com</p>
-          <p><i class="pi pi-briefcase"></i></p>
-        </div>
-        <div class="col-4">
-          <h3>Contact</h3>
-          <p><i class="pi pi-phone"></i> +1 (123) 456-7890</p>
-          <p><i class="pi pi-map-marker"></i> 123 Main Street, Anytown USA</p>
-        </div>
-        <div class="col-4">
-          <h3>Settings</h3>
-          <button pButton label="Edit Profile" icon="pi pi-pencil" class="p-button-rounded p-button-text"></button>
-          <button pButton label="Change Password" icon="pi pi-lock" class="p-button-rounded p-button-text"></button>
-        </div>
+    </p-card>
+    <p-card subheader="Nombre de Usuario" class="w-full">
+      <div class="flex flex-column w-full gap-2">
+        <input
+          type="text"
+          pInputText
+          placeholder="Nombre de Usuario"
+          [value]="user.username"
+          [(ngModel)]="user.username"
+          [disabled]="true"
+        />
       </div>
-    </div>
+    </p-card>
+    <p-card subheader="Correo Electrónico" class="w-full">
+      <div class="flex flex-column w-full gap-2">
+        <input
+          pInputText
+          placeholder="Correo Electrónico"
+          [value]="user.email"
+          [(ngModel)]="user.email"
+        />
+      </div>
+    </p-card>
+    <p-card
+      *ngIf="user.role === 'speaker'"
+      subheader="Enlace de LinkedIn"
+      class="w-full"
+    >
+      <div class="flex flex-column w-full gap-2">
+        <input
+          pInputText
+          placeholder="Enlace de LinkedIn"
+          [value]="user.linkedin"
+          [(ngModel)]="user.linkedin"
+        />
+      </div>
+    </p-card>
   </div>
+  <p-card subheader="Imagen de Perfil" class="w-38rem">
+    <div
+      class="w-full flex flex-column gap-4 justify-content-center align-items-center p-2"
+    >
+      <p-fileUpload
+        #studentFU
+        mode="basic"
+        accept="image/*"
+        maxFileSize="1000000"
+        customUpload="true"
+        (uploadHandler)="uploadPfp($event, studentFU)"
+        auto="true"
+        chooseLabel="Seleccionar"
+        uploadLabel="Subir"
+        cancelLabel="Cancelar"
+        styleClass=" mt-3"
+      ></p-fileUpload>
+      <p-image
+        [src]="
+          user.profile_picture === null
+            ? 'https://via.placeholder.com/400'
+            : user.profile_picture
+        "
+        alt="Profile Picture"
+        width="400px"
+        height="400px"
+      />
+    </div>
+  </p-card>
 </div>

@@ -1,19 +1,17 @@
 <div
-  class="w-full text-center flex flex-row justify-content-between align-items-center"
+  class="w-full text-center flex flex-row justify-content-between align-items-center main"
 >
-  <img src="logo_nexify.png" height="70rem" class="m-2" />
+  <div
+    class="flex flex-row gap-4 m-2 justify-content-center align-items-center"
+  >
+    <img src="2.png" height="70rem" />
+
+    @if (!isOnAuth) {
+    <i class="pi pi-search" style="font-size: 1.5rem; color: white"></i>
+    <input pInputText class="search" type="text" placeholder="Buscar eventos" />
+    }
+  </div>
   <div class="flex flex-row gap-4 m-2">
-    <!-- <div class="flex flex-row gap-0 align-items-center">
-      <p-chip
-        styleClass="bg-transparent"
-        [icon]="isDarkMode ? 'pi pi-moon' : 'pi pi-sun'"
-      />
-      <p-inputSwitch
-        [ngModel]="isDarkMode"
-        (ngModelChange)="toggleLightDark()"
-        styleClass="p-button-rounded"
-      />
-    </div> -->
     @if (!isOnAuth) {
     <!-- Coordinator Buttons -->
     <p-button
@@ -49,6 +47,7 @@
     <p-button
       [icon]="selButtonStyle.icon"
       [label]="selButtonStyle.label"
+      styleClass="w-8rem"
       [severity]="selButtonStyle.severity"
       (click)="goToProfile()"
     />

@@ -4,6 +4,7 @@
   class="flex flex-row gap-8 justify-content-center align-items-center w-full"
 >
   <p-button
+    *ngIf="role === 'student'"
     [label]="
       event.is_participant! === true ? 'Dejar de Participar' : 'Participar'
     "
@@ -12,7 +13,7 @@
     "
     (click)="joinLeaveEvent()"
   />
-  <event-clock [targetDate]="eventDate" />
+  <event-clock [targetDate]="eventDate" [maxDate]="event.end_date!" />
 </div>
 <!-- Body -->
 <h3 class="text-center">{{ event.title }}</h3>
