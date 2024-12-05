@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FileUpload } from 'primeng/fileupload';
 import { AddEventSpeaker, FullEvent } from '../../../classes/event.class';
 import { User } from '../../../classes/user.class';

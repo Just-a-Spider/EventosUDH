@@ -101,10 +101,10 @@ export class EventListComponent implements OnInit {
     this.eventsService.getEvent(eventId).subscribe({
       next: (event) => {
         this.currentEvent = event;
-        this.getParticipants();
         if (edit) {
           this.displayEdit = true;
         } else {
+          this.getParticipants();
           this.displayEvent = true;
         }
       },
