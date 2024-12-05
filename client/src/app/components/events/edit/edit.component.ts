@@ -84,7 +84,7 @@ export class EditEventForm implements OnChanges {
       reader.readAsDataURL(this.uploadedImage);
     }
     reader.onload = () => {
-      this.imagePreview = reader.result;
+      this.event.promotional_image = reader.result as string;
     };
   }
 
@@ -115,7 +115,7 @@ export class EditEventForm implements OnChanges {
     }
 
     if (this.uploadedImage) {
-      formData.append('image', this.uploadedImage);
+      formData.append('promotional_image', this.uploadedImage);
     }
 
     // Add speakers
