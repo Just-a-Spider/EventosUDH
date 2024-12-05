@@ -14,6 +14,14 @@
         styleClass="p-button-rounded"
       />
     </div>
+    @if (!isOnAuth) {
+    <p-button
+      *ngIf="role === 'coordinator'"
+      icon="pi pi-plus"
+      label="Nuevo Evento"
+      [severity]="selButtonStyle.severity"
+      styleClass="p-button-rounded"
+    />
     <header-notis />
     <p-button
       [icon]="selButtonStyle.icon"
@@ -27,6 +35,6 @@
       [severity]="selButtonStyle.severity"
       styleClass="p-button-rounded"
       (click)="logout()"
-    />
+    />}
   </div>
 </div>

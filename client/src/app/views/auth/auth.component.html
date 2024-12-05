@@ -1,46 +1,49 @@
-<div class="flex justify-content-center align-items-center min-h-screen bg-dark">
-  <div class="surface-card shadow-4 border-round-lg overflow-hidden w-full sm:w-10 md:w-8 lg:w-6 flex flex-column md:flex-row">
+<div
+  class="flex justify-content-center align-items-center min-h-screen bg-dark"
+>
+  <div
+    class="surface-card shadow-4 border-round-lg overflow-hidden w-full sm:w-10 md:w-8 lg:w-6 flex flex-column md:flex-row"
+  >
     <!-- Form Section -->
     <div class="p-4 w-full md:w-6">
-      <h2 class="text-primary font-bold mb-2 text-center">{{ toggleForm ? 'REGÍSTRATE' : 'BIENVENIDO' }}</h2>
+      <h2 class="text-primary font-bold mb-2 text-center">
+        {{ toggleForm ? "REGÍSTRATE" : "BIENVENIDO" }}
+      </h2>
       <p class="text-center mb-3">
-        {{ toggleForm
-          ? '¿Ya tienes una cuenta? '
-          : '¿No tienes una cuenta? ' }}
-        <span class="text-primary cursor-pointer" (click)="toggleForm = !toggleForm">
-          {{ toggleForm ? 'Inicia Sesión aquí' : 'Regístrate aquí' }}
+        {{ toggleForm ? "¿Ya tienes una cuenta? " : "¿No tienes una cuenta? " }}
+        <span
+          class="text-primary cursor-pointer"
+          (click)="toggleForm = !toggleForm"
+        >
+          {{ toggleForm ? "Inicia Sesión aquí" : "Regístrate aquí" }}
         </span>
       </p>
       <p-button
-  icon="pi pi-google"
-  label="Iniciar sesión con Google"
-  styleClass="w-full my-3 p-button"
-  (click)="googleLogin()"
-></p-button>
+        icon="pi pi-google"
+        label="Iniciar sesión con Google"
+        styleClass="w-full my-3 p-button"
+        (click)="googleLogin()"
+      ></p-button>
 
       <!-- Toggle Form -->
       @if (toggleForm === false) {
       <!-- Login Form -->
       <form [formGroup]="loginFormGroup" class="flex flex-column gap-2">
-        <div class="field w-full">
-          <input
-            type="text"
-            pInputText
-            formControlName="email_username"
-            placeholder="Correo o Código de Estudiante"
-            class="p-inputtext border-bottom w-full"
-          />
-        </div>
-        <div class="field w-full">
-          <p-password
-            formControlName="password"
-            placeholder="Contraseña"
-            [toggleMask]="true"
-            strongLabel=""
-            class="border-bottom w-full"
-          ></p-password>
-        </div>
-        <div class="flex justify-content-start gap-3 align-items-center mt-2">
+        <input
+          type="text"
+          pInputText
+          formControlName="email_username"
+          placeholder="Correo o Código de Estudiante"
+          class="w-full"
+        />
+        <p-password
+          formControlName="password"
+          placeholder="Contraseña"
+          [feedback]="false"
+          [inputStyle]="{ width: '100%' }"
+          [style]="{ width: '100%' }"
+        />
+        <div class="flex justify-content-between gap-3 align-items-center mt-2">
           <div *ngFor="let category of categories" class="field-checkbox">
             <p-radioButton
               [inputId]="category.key"
@@ -64,61 +67,55 @@
       } @else {
       <!-- Register Form -->
       <form [formGroup]="registerFormGroup" class="flex flex-column gap-3">
-        <div class="field w-full">
+        <input
+          type="text"
+          pInputText
+          formControlName="email"
+          placeholder="Correo"
+          class="w-full"
+        />
+        <div class="flex flex-row gap-2">
           <input
             type="text"
             pInputText
-            formControlName="email"
-            placeholder="Correo"
+            formControlName="first_name"
+            placeholder="Nombres"
+            class="p-inputtext border-bottom w-full"
+          />
+          <input
+            type="text"
+            pInputText
+            formControlName="last_name"
+            placeholder="Apellidos"
             class="p-inputtext border-bottom w-full"
           />
         </div>
-        <div class="grid gap-3">
-          <div class="col-6">
-            <input
-              type="text"
-              pInputText
-              formControlName="first_name"
-              placeholder="Nombres"
-              class="p-inputtext border-bottom w-full"
-            />
-          </div>
-          <div class="col-6">
-            <input
-              type="text"
-              pInputText
-              formControlName="last_name"
-              placeholder="Apellidos"
-              class="p-inputtext border-bottom w-full"
-            />
-          </div>
-        </div>
-        <div class="field w-full">
-          <p-password
-            formControlName="password"
-            placeholder="Contraseña"
-            [feedback]="true"
-            class="border-bottom w-full"
-          ></p-password>
-        </div>
-        <div class="field w-full">
-          <p-password
-            formControlName="confirm_password"
-            placeholder="Confirmar contraseña"
-            [feedback]="true"
-            class="border-bottom w-full"
-          ></p-password>
-        </div>
+        <p-password
+          formControlName="password"
+          placeholder="Contraseña"
+          [feedback]="true"
+          [inputStyle]="{ width: '100%' }"
+          [style]="{ width: '100%' }"
+        />
+        <p-password
+          formControlName="confirm_password"
+          placeholder="Confirmar contraseña"
+          [feedback]="true"
+          [inputStyle]="{ width: '100%' }"
+          [style]="{ width: '100%' }"
+        />
         <p-button
           label="Registrarse"
-          styleClass="p-button-success w-full mt-3"
+          styleClass="w-full"
           (click)="register()"
         ></p-button>
       </form>
       }
     </div>
     <!-- Image Section -->
-    <div class="w-full md:w-6 bg-primary-light flex align-items-center justify-content-center">
+    <div
+      class="w-full md:w-6 bg-primary-light flex align-items-center justify-content-center"
+    >
       <img
         src="https://via.placeholder.com/400"
         alt="Universidad"

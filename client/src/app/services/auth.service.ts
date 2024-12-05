@@ -17,6 +17,10 @@ export class AuthService {
     this.userSubject.next(user);
   }
 
+  getRole() {
+    return this.userSubject.value.role as string;
+  }
+
   constructor(private http: HttpClient) {
     this.userSubject = new BehaviorSubject<User>(new User());
     this.user$ = this.userSubject.asObservable();
@@ -44,7 +48,8 @@ export class AuthService {
         withCredentials: true,
       })
       .subscribe({
-        next: (response) => {
+        next: () => {
+          this.userSubject.next(new User());
           window.location.href = '/auth';
         },
         error: (error) => {
@@ -56,6 +61,20 @@ export class AuthService {
   getUser(): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}me/`, {
       withCredentials: true,
+    });
+  }
+
+  sendResetPasswordEmail(email: string, role: string) {
+    return this.http.post(`${this.apiUrl}send-password-reset-token/`, {
+      email,
+      role,
+    });
+  }
+
+  resetPassword(token: string, password: string) {
+    return this.http.post(`${this.apiUrl}password-reset/`, {
+      token,
+      password,
     });
   }
 }
