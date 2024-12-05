@@ -5,8 +5,11 @@
     class="flex flex-row gap-4 m-2 justify-content-center align-items-center"
   >
     <img src="2.png" height="70rem" />
+
+    @if (!isOnAuth) {
     <i class="pi pi-search" style="font-size: 1.5rem; color: white"></i>
     <input pInputText class="search" type="text" placeholder="Buscar eventos" />
+    }
   </div>
   <div class="flex flex-row gap-4 m-2">
     @if (!isOnAuth) {
