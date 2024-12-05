@@ -7,7 +7,10 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 })
 export class LiveClockComponent implements OnInit, OnDestroy {
   @Input() targetDate: Date = new Date();
+  @Input() maxDate: Date = new Date();
+
   timeRemaining: string = '';
+  severity: any = 'info';
   private intervalId: any;
 
   ngOnInit() {
@@ -29,7 +32,14 @@ export class LiveClockComponent implements OnInit, OnDestroy {
     const difference = target - now;
 
     if (difference <= 0) {
-      this.timeRemaining = 'Time is up!';
+      const maxDifference = new Date(this.maxDate).getTime() - target;
+      if (maxDifference > 0) {
+        this.timeRemaining = 'Evento en curso';
+        this.severity = 'success';
+      } else {
+        this.timeRemaining = 'Evento Finalizado';
+        this.severity = 'danger';
+      }
       if (this.intervalId) {
         clearInterval(this.intervalId);
       }

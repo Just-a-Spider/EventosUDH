@@ -18,7 +18,7 @@ export class EventListComponent implements OnInit {
   currentEvent: FullEvent = new FullEvent();
   pageOptions: number[] = [];
   pageDropdownOptions: { label: string; value: number }[] = [];
-  limit = 10;
+  limit = 12;
   offset = 0;
   totalItems = 0;
   currentPage = 1;

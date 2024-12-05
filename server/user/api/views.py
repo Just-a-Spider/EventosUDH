@@ -63,7 +63,6 @@ class LogoutView(APIView):
         return response
 
 class MeView(RetrieveAPIView):
-
     def get_serializer_class(self):
         user = self.request.user
         user_class_name = user.__class__.__name__
@@ -75,8 +74,25 @@ class MeView(RetrieveAPIView):
             raise NotFound('User not found')
         return user
 
-class RefreshTokenView(APIView):
+class ProfileView(APIView):
+    def get_serializer_class(self):
+        user = self.request.user
+        user_class_name = user.__class__.__name__
+        return serializer_class_map[user_class_name]
+    
+    def post(self, request):
+        user = request.user
+        serializer = self.get_serializer_class()(user, data=request.data, partial=True)
+        try:
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response({'detail': 'Perfil actualizado'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
 
+
+class RefreshTokenView(APIView):
     def get(self, request):
         refresh_token = request.COOKIES.get('refresh_token')
         if not refresh_token:

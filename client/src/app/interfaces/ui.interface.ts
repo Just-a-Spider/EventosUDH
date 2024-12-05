@@ -9,19 +9,19 @@ export const BUTTONS: ButtonInterface[] = [
   {
     mode: 'student',
     icon: 'pi pi-book',
-    severity: 'info',
+    severity: '',
     label: 'Estudiante',
   },
   {
     mode: 'coordinator',
     icon: 'pi pi-users',
-    severity: 'warning',
+    severity: '',
     label: 'Coordinador',
   },
   {
     mode: 'speaker',
     icon: 'pi pi-bullhorn',
-    severity: 'help',
+    severity: '',
     label: 'Ponente',
   },
 ];

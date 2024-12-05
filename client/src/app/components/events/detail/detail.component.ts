@@ -13,6 +13,7 @@ export class EventDetailComponent {
   @Input() event: FullEvent = new FullEvent();
   @Input() participants: User[] = [];
   eventDate = new Date();
+  role = localStorage.getItem('role');
 
   constructor(private router: Router, private eventsService: EventsService) {}
 

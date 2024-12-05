@@ -16,6 +16,9 @@ export class AuthService {
   setUser(user: User) {
     this.userSubject.next(user);
   }
+  getUserValue() {
+    return this.userSubject.value;
+  }
 
   getRole() {
     return this.userSubject.value.role as string;
@@ -75,6 +78,19 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}password-reset/`, {
       token,
       password,
+    });
+  }
+
+  saveProfile(file: File | null = null, user: User) {
+    const formData = new FormData();
+    formData.append('username', user.username!);
+    formData.append('email', user.email!);
+    formData.append('linkedin', user.linkedin!);
+    if (file) {
+      formData.append('profile_picture', file);
+    }
+    return this.http.post(`${this.apiUrl}profile/`, formData, {
+      withCredentials: true,
     });
   }
 }

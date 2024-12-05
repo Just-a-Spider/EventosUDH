@@ -58,7 +58,7 @@ export class AuthView {
       this.authService.login(this.loginFormGroup.value).subscribe({
         next: (response: any) => {
           localStorage.setItem('role', response.role);
-          window.location.href = '/';
+          window.location.href = '/events';
         },
         error: (error) => {
           this.messages = [

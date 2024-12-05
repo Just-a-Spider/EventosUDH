@@ -36,6 +36,8 @@ import { ProfileView } from './views/profile/profile.component';
 import { ResetPasswordView } from './views/reset-password/reset-password.component';
 import { EditEventForm } from './components/events/edit/edit.component';
 import { SpeakersListComponent } from './components/speakers/list/list.component';
+import { SpeakerDetailComponent } from './components/speakers/detail/detail.component';
+import { NewComponent } from './components/speakers/new/new.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +65,8 @@ import { SpeakersListComponent } from './components/speakers/list/list.component
     ResetPasswordView,
     EditEventForm,
     SpeakersListComponent,
+    SpeakerDetailComponent,
+    NewComponent,
   ],
   imports: [
     BrowserModule,
