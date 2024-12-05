@@ -38,6 +38,7 @@ import { EditEventForm } from './components/events/edit/edit.component';
 import { SpeakersListComponent } from './components/speakers/list/list.component';
 import { SpeakerDetailComponent } from './components/speakers/detail/detail.component';
 import { NewComponent } from './components/speakers/new/new.component';
+import { RestorePassView } from './views/restore-pass/restore-pass.component';
 
 @NgModule({
   declarations: [
