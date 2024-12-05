@@ -30,13 +30,11 @@ export class NewEventForm {
     this.eventsService.getSpeakers().subscribe({
       next: (speakers: User[]) => {
         this.registeredSpeakers = speakers;
-        console.log(this.registeredSpeakers);
       },
     });
     this.eventsService.getEventTypes().subscribe({
       next: (eventTypes: Item[]) => {
         this.eventCategories = eventTypes;
-        console.log(this.eventCategories);
       },
     });
     this.eventForm = this.fb.group({

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { FileUpload } from 'primeng/fileupload';
 import { AddEventSpeaker, FullEvent } from '../../../classes/event.class';
 import { User } from '../../../classes/user.class';
@@ -14,7 +14,7 @@ interface Item {
   templateUrl: './edit.component.html',
   styleUrl: './edit.component.scss',
 })
-export class EditEventForm {
+export class EditEventForm implements OnChanges {
   @Input() event: FullEvent = new FullEvent();
 
   speakers: AddEventSpeaker[] = [];
@@ -23,6 +23,11 @@ export class EditEventForm {
   virtualEvent = false;
   studentOrganizer = false;
   eventCategories: Item[] = [];
+
+  placeholderDates = {
+    start: '',
+    end: '',
+  };
 
   registeredSpeakers: User[] = [];
 
@@ -51,6 +56,26 @@ export class EditEventForm {
     });
   }
 
+  ngOnChanges() {
+    if (this.event && this.event.speakers!) {
+      this.speakers = this.event.speakers!.map((speaker) => ({
+        first_name: speaker.speaker.first_name || '',
+        last_name: speaker.speaker.last_name || '',
+        email: speaker.speaker.email || '',
+        subject: speaker.subject || '',
+      }));
+      this.studentOrganizer = this.event.student_organizer !== null;
+      this.virtualEvent =
+        this.event.location === '' || this.event.location === null;
+      this.placeholderDates.start = this.event.start_date
+        ? new Date(this.event.start_date).toISOString()
+        : '';
+      this.placeholderDates.end = this.event.end_date
+        ? new Date(this.event.end_date).toISOString()
+        : '';
+    }
+  }
+
   uploadImage(event: any, item: FileUpload) {
     this.uploadedImage = event.files[0];
     item.clear();
@@ -68,23 +93,33 @@ export class EditEventForm {
     const formData = new FormData();
     formData.append('title', event.title!);
     formData.append('description', event.description!);
-    formData.append('start_date', event.start_date!.toISOString());
-    formData.append('end_date', event.end_date!.toISOString());
-    formData.append('location', event.location!);
-    formData.append('virtual', this.virtualEvent ? 'true' : 'false');
-    formData.append(
-      'student_organizer',
-      this.studentOrganizer ? 'true' : 'false'
+    formData.append('start_date', new Date(event.start_date!).toISOString());
+    formData.append('end_date', new Date(event.end_date!).toISOString());
+    // Print the dates to the console
+    console.log(new Date(event.start_date!).toISOString());
+    console.log(new Date(event.end_date!).toISOString());
+    if (this.virtualEvent) {
+      formData.append('location', '');
+    }
+
+    if (this.studentOrganizer) {
+      formData.append('organizer', '');
+    }
+
+    // Get the event_type id from the name
+    const eventType = this.eventCategories.find(
+      (category) => category.name === event.event_type
     );
-    formData.append('event_type', event.event_type!);
+    if (eventType) {
+      formData.append('event_type', eventType.id);
+    }
 
     if (this.uploadedImage) {
       formData.append('image', this.uploadedImage);
     }
 
-    this.speakers.forEach((speaker) => {
-      formData.append('speakers', JSON.stringify(speaker));
-    });
+    // Add speakers
+    formData.append('speakers', JSON.stringify(this.speakers));
 
     this.eventsService.editEvent(event.id!, formData).subscribe({
       next: (updatedEvent) => {
@@ -99,6 +134,8 @@ export class EditEventForm {
   // Speakers
   removeSpeaker(index: number) {
     this.speakers.splice(index, 1);
+    // Remove the speaker from the event speakers
+    this.event.speakers!.splice(index, 1);
   }
 
   addSpeaker() {

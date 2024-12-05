@@ -80,26 +80,12 @@ class EventViewSet(viewsets.ModelViewSet):
             self.request.user.__class__ != role_to_model.get('coordinator')
             or not
             self.request.user == event.organizer
-            or not
-            self.request.user == event.student_organizer
         ):
             raise PermissionDenied('You are not allowed to update events')
 
         instance = self.get_object()
         validated_data = serializer.validated_data
-
-        # Fields to update
-        fields_to_update = {
-            'organizer': self.request.user,
-            'faculty': Faculty.objects.get(coordinator=self.request.user),
-            'student_organizer': None,
-        }
-
-        for field, default_value in fields_to_update.items():
-            if field in validated_data:
-                validated_data[field] = validated_data[field]
-            elif default_value is not None:
-                validated_data[field] = default_value
+        print(validated_data)
 
         serializer.update(instance, validated_data)
 

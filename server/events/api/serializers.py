@@ -3,6 +3,7 @@ from user.api.serializers import StudentSerializer, CoordinatorSerializer, Speak
 from user.models import Speaker
 from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
+import json
 
 def add_speaker_to_event(event, speaker_data):
     email = speaker_data['email']
@@ -32,6 +33,28 @@ def add_speaker_to_event(event, speaker_data):
     )
 
     return event_speaker
+
+def modify_speakers(event, speakers_data):
+    # Get the speakers that are already in the event
+    event_speakers_emails = event.event_speakers.values_list('speaker__email', flat=True)
+
+    # Delete the speakers that are not in the new list
+    for event_speaker in event.event_speakers.all():
+        if event_speaker.speaker.email not in [speaker_data['email'] for speaker_data in speakers_data]:
+            event_speaker.delete()
+
+    for speaker_data in speakers_data:
+        speaker_email = speaker_data.get('email', None)
+        if speaker_email and speaker_email not in event_speakers_emails:
+            add_speaker_to_event(event, speaker_data)
+        elif speaker_email:
+            event_speakers = models.EventSpeaker.objects.filter(
+                event=event,
+                speaker__email=speaker_email
+            )
+            for event_speaker in event_speakers:
+                event_speaker.subject = speaker_data['subject']
+                event_speaker.save()
 
 class EventTypeModelSerializer(serializers.ModelSerializer):
     faculty = serializers.StringRelatedField(read_only=True)
@@ -75,9 +98,35 @@ class CreateSerializer(serializers.ModelSerializer):
         # Speakers Creation or Update
         if speakers_data.__len__() > 0:
             for speaker_data in speakers_data:
-                add_speaker_to_event(event, speaker_data)
+                modify_speakers(event, speaker_data)
 
         return event
+    
+    def update(self, instance, validated_data):
+        speakers_data = validated_data.pop('speakers', [])
+        location = validated_data.pop('location', None)
+        student_organizer = validated_data.pop('student_organizer', None)
+        if student_organizer == '':
+            student_organizer = None
+        if location == '':
+            location = None
+
+        instance.location = location
+        instance.student_organizer = student_organizer
+        instance.title = validated_data.get('title', instance.title)
+        instance.start_date = validated_data.get('start_date', instance.start_date)
+        instance.end_date = validated_data.get('end_date', instance.end_date)
+        instance.event_type = validated_data.get('event_type', instance.event_type)
+        instance.promotional_image = validated_data.get('promotional_image', instance.promotional_image)
+        instance.save()
+
+        # Speakers Creation or Update
+        if speakers_data.__len__() > 0:
+            modify_speakers(instance, speakers_data)
+        else:
+            instance.event_speakers.all().delete()
+
+        return instance
     
     def to_representation(self, instance):
             representation = super().to_representation(instance)
