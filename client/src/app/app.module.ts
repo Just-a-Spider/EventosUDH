@@ -31,6 +31,7 @@ import { EventParticipantsComponent } from './components/events/detail/participa
 import { EventSpeakersComponent } from './components/events/detail/speakers/speakers.component';
 import { TranslateRolePipe } from './pipes/translate-role.pipe';
 import { ResetPasswordView } from './views/reset-password/reset-password.component';
+import { RestorePassView } from './views/restore-pass/restore-pass.component';
 
 @NgModule({
   declarations: [
